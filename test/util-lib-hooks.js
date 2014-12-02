@@ -47,7 +47,14 @@ describe('lib/hooks', function() {
 
       expect(combos).to.be.an('array');
       expect(combos).to.have.length(1);
-      expect(combos[0]).to.deep.equal(['/repo/path/', 'branch']);
+      expect(combos[0]).to.deep.equal({
+          repo: '/repo/path/'
+        , branch: 'branch'
+        , conf: {
+              dir: '/local/path'
+            , test: true
+          }
+      });
     });
 
     it('should filter duplicate combos', function() {
@@ -178,8 +185,22 @@ describe('lib/hooks', function() {
 
       expect(combos).to.be.an('array');
       expect(combos).to.have.length(2);
-      expect(combos[0]).to.deep.equal(['/repo/path/', 'branch']);
-      expect(combos[1]).to.deep.equal(['/repo/path/', 'other_branch']);
+      expect(combos[0]).to.deep.equal({
+          repo: '/repo/path/'
+        , branch: 'branch'
+        , conf: {
+              dir: '/local/path'
+            , test: true
+          }
+      });
+      expect(combos[1]).to.deep.equal({
+          repo: '/repo/path/'
+        , branch: 'other_branch'
+        , conf: {
+              dir: '/other/branch/dir'
+            , test: false 
+          }
+      });
     });
   });
 });
