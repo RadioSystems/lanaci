@@ -1,0 +1,23 @@
+{
+  "name": "ballin-lana",
+  "version": "0.0.1",
+  "description": "A simple continuous integration solution for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elzair/ballin-lana.git"
+  },
+  "keywords": [
+    "ci",
+    "continuousintegration"
+  ],
+  "author": "Philip Woods",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elzair/ballin-lana/issues"
+  },
+  "homepage": "https://github.com/elzair/ballin-lana"
+}
