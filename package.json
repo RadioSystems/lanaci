@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/elzair/ballin-lana/issues"
   },
-  "homepage": "https://github.com/elzair/ballin-lana"
+  "homepage": "https://github.com/elzair/ballin-lana",
+  "dependencies": {
+    "nodegit": "^0.2.3"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
+  }
 }
