@@ -8,12 +8,14 @@ describe('lib/misc', function() {
       var repos = misc.readConf('repos.json.template');
 
       expect(repos).to.be.an('object');
-      expect(repos).to.have.property('/repo/path/');
-      expect(repos['/repo/path/']).to.be.an('object');
-      expect(repos).to.have.deep.property('/repo/path/.branch');
-      expect(repos['/repo/path/'].branch).to.be.an('object');
-      expect(repos).to.have.deep.property('/repo/path/.branch.dir', '/local/path');
-      expect(repos).to.have.deep.property('/repo/path/.branch.test', true);
+      expect(repos).to.have.property('bitbucket');
+      expect(repos.bitbucket).to.be.an('object');
+      expect(repos).to.have.deep.property('bitbucket./repo/path/');
+      expect(repos.bitbucket['/repo/path/']).to.be.an('object');
+      expect(repos).to.have.deep.property('bitbucket./repo/path/.branch');
+      expect(repos.bitbucket['/repo/path/'].branch).to.be.an('object');
+      expect(repos).to.have.deep.property('bitbucket./repo/path/.branch.dir', '/local/path');
+      expect(repos).to.have.deep.property('bitbucket./repo/path/.branch.test', true);
     });
   });
 

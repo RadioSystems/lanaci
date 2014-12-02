@@ -1,8 +1,14 @@
 {
-  "/repo/path/": {
-    "branch": {
-        "dir": "/local/path"
-      , "test": true
+  "bitbucket": {
+    "/repo/path/": {
+        "branch": {
+            "dir": "/local/path"
+          , "test": true
+        }
+      , "other_branch": {
+            "dir": "/other/branch/dir"
+          , "test": false
+        }
     }
   }
 }
