@@ -2,24 +2,20 @@
     "bitbucket": {
       "/repo/path/": {
           "branch": {
-              "dir": "/local/path"
-            , "test": true
+            "test": true
           }
         , "other_branch": {
-              "dir": "/other/branch/dir"
-            , "test": false
+            "test": false
           }
       }
     }
   , "github": {
       "/github/repo/": {
           "another_branch": {
-              "dir": "/github/repo"
-            , "test": true
+            "test": true
           }
         , "yet_another_branch": {
-              "dir": "/github/other/repo"
-            , "test": false 
+            "test": false 
           }
       }
     }

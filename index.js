@@ -1,5 +1,5 @@
 var restify   = require('restify')
-  , routes    = require(__dirname + '/lib/routes')
+  , routes    = require(__dirname + '/routes')
   , integrate = routes.integrate
   ;
 

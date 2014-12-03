@@ -57,8 +57,7 @@ describe('lib/hooks', function() {
           repo: '/repo/path/'
           , branch: 'branch'
           , conf: {
-            dir: '/local/path'
-            , test: true
+            test: true
           }
         });
       });
@@ -199,16 +198,14 @@ describe('lib/hooks', function() {
           repo: '/repo/path/'
           , branch: 'branch'
           , conf: {
-            dir: '/local/path'
-            , test: true
+            test: true
           }
         });
         expect(combos[1]).to.deep.equal({
           repo: '/repo/path/'
           , branch: 'other_branch'
           , conf: {
-            dir: '/other/branch/dir'
-            , test: false 
+            test: false 
           }
         });
       });
@@ -396,8 +393,7 @@ describe('lib/hooks', function() {
           repo: '/github/repo/'
           , branch: 'another_branch'
           , conf: {
-            dir: '/github/repo'
-            , test: true
+            test: true
           }
         });
       });
