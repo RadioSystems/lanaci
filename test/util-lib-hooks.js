@@ -402,5 +402,20 @@ describe('lib/hooks', function() {
         });
       });
     });
+
+    describe('error', function() {
+      it('should gracefully handle an invalid hook', function() {
+        var invalidRequest = mocks.createRequest({
+          "method": "POST",
+          "url": "/",
+          "body": {
+            "foo": "bar"
+          }
+        });
+
+        var error = hooks.handleHooks(invalidRequest, "repos.json.template");
+        expect(error).to.equal("Hook not supported");
+      });
+    });
   });
 });
