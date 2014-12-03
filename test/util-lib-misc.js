@@ -8,18 +8,30 @@ describe('lib/misc', function() {
       var repos = misc.readConf('repos.json.template');
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
-        "bitbucket": {
-          "/repo/path/": {
-              "branch": {
+          "bitbucket": {
+            "/repo/path/": {
+                "branch": {
                   "dir": "/local/path"
-                , "test": true
-              }
-            , "other_branch": {
-                  "dir": "/other/branch/dir"
-                , "test": false
-              }
+                  , "test": true
+                }
+              , "other_branch": {
+                    "dir": "/other/branch/dir"
+                  , "test": false
+                }
+            }
           }
-        }
+        , "github": {
+            "/github/repo/": {
+                "another_branch": {
+                  "dir": "/github/repo"
+                  , "test": true
+                }
+              , "yet_another_branch": {
+                  "dir": "/github/other/repo"
+                  , "test": false 
+                }
+            }
+          }
       });
     });
   });
