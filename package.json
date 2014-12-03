@@ -4,7 +4,10 @@
   "description": "A simple continuous integration solution for Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/*.js"
+    "pretest": "npm install",
+    "test": "./node_modules/mocha/bin/mocha test/*.js",
+    "prestart": "NODE_ENV=production npm install",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
