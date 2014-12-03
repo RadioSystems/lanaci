@@ -199,11 +199,6 @@ describe('lib/hooks', function() {
         , conf: {
               dir: '/other/branch/dir'
             , test: false 
-            , auth: {
-              method: 'ssh'
-              , public_key: '/tmp/.ssh/id_rsa.pub'
-              , private_key: '/tmp/.ssh/id_rsa'
-            }
           }
       });
     });
