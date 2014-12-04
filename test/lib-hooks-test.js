@@ -54,10 +54,11 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
         expect(combos[0]).to.deep.equal({
-          repo: '/repo/path/'
+          repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-            test: true
+              test: true
+            , build: true
           }
         });
       });
@@ -195,17 +196,19 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
         expect(combos[0]).to.deep.equal({
-          repo: '/repo/path/'
+          repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-            test: true
+              test: true
+            , build: true
           }
         });
         expect(combos[1]).to.deep.equal({
-          repo: '/repo/path/'
+          repo: 'repo/path'
           , branch: 'other_branch'
           , conf: {
-            test: false 
+              test: false 
+            , build: false
           }
         });
       });
@@ -390,10 +393,11 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
         expect(combos[0]).to.deep.equal({
-          repo: '/github/repo/'
+            repo: 'github/repo'
           , branch: 'another_branch'
           , conf: {
-            test: true
+              test: true
+            , build: true
           }
         });
       });
@@ -402,10 +406,10 @@ describe('lib/hooks', function() {
     describe('error', function() {
       it('should gracefully handle an invalid hook', function() {
         var invalidRequest = mocks.createRequest({
-          "method": "POST",
-          "url": "/",
-          "body": {
-            "foo": "bar"
+          method: "POST",
+          url: "/",
+          body: {
+            foo: "bar"
           }
         });
 

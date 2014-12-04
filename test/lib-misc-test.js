@@ -9,22 +9,28 @@ describe('lib/misc', function() {
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
           "bitbucket": {
-            "/repo/path/": {
+            "repo/path": {
                 "branch": {
-                  "test": true
+                    "test": true
+                  , "build": true
                 }
               , "other_branch": {
-                  "test": false
+                    "test": false
+                  , "build": false
                 }
             }
           }
         , "github": {
-            "/github/repo/": {
+            "github/repo": {
                 "another_branch": {
-                  "test": true
+                    "test": true
+                  , "build": true
+
                 }
               , "yet_another_branch": {
-                  "test": false 
+                    "test": false
+                  , "build": false
+
                 }
             }
           }
@@ -35,33 +41,33 @@ describe('lib/misc', function() {
   describe('isIn', function() {
     it('should return true when the element is already present in the array', function() {
       var arr = [
-        ['/test/me', 'master']
-        , ['/petsafesoftwareteam/rscswitchboard', 'master']
-        , ['/petsafesoftwareteam/rscswitchboard', 'test']
+          ['test/me', 'master']
+        , ['petsafesoftwareteam/rscswitchboard', 'master']
+        , ['petsafesoftwareteam/rscswitchboard', 'test']
       ];
-      var el = ['/petsafesoftwareteam/rscswitchboard', 'test'];
+      var el = ['petsafesoftwareteam/rscswitchboard', 'test'];
 
       expect(misc.isIn(arr, el)).to.equal(true);
     });
 
     it('should return false when no array element matches the element', function() {
       var arr = [
-        ['/test/me', 'master']
-        , ['/another/rscswitchboard', 'test']
-        , ['/petsafesoftwareteam/rscswitchboard', 'master']
+        ['test/me', 'master']
+        , ['another/rscswitchboard', 'test']
+        , ['petsafesoftwareteam/rscswitchboard', 'master']
       ];
-      var el = ['/petsafesoftwareteam/rscswitchboard', 'test'];
+      var el = ['petsafesoftwareteam/rscswitchboard', 'test'];
       
       expect(misc.isIn(arr, el)).to.equal(false);
     });
 
     it('should match case', function() {
       var arr = [
-        ['/test/me', 'master']
-        , ['/petsafesoftwareteam/rscswitchboard', 'master']
-        , ['/petsafesoftwareteam/rscswitchboard', 'TEST']
+          ['test/me', 'master']
+        , ['petsafesoftwareteam/rscswitchboard', 'master']
+        , ['petsafesoftwareteam/rscswitchboard', 'TEST']
       ];
-      var el = ['/petsafesoftwareteam/rscswitchboard', 'test'];
+      var el = ['petsafesoftwareteam/rscswitchboard', 'test'];
       
       expect(misc.isIn(arr, el)).to.equal(false);
     });

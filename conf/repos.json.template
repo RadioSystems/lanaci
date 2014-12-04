@@ -1,21 +1,25 @@
 {
     "bitbucket": {
-      "/repo/path/": {
+      "repo/path": {
           "branch": {
-            "test": true
+              "test": true
+            , "build": true
           }
         , "other_branch": {
             "test": false
+            , "build": false
           }
       }
     }
   , "github": {
-      "/github/repo/": {
+      "github/repo": {
           "another_branch": {
-            "test": true
+              "test": true
+            , "build": true
           }
         , "yet_another_branch": {
-            "test": false 
+              "test": false 
+            , "build": false
           }
       }
     }
