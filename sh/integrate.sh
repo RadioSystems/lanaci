@@ -1,17 +1,24 @@
 #!/bin/sh
-REPOSDIR="/home/lana/repos/"
-LOGSDIR="/home/lana/logs/"
+
 REPO=$1
 BRANCH=$2
 TEST=$3
-TMPFILE="${LOGSDIR}${REPO}/TEMP"
-ERRFILE="${LOGSDIR}${REPO}/ERR"
-LOGFILE="${LOGSDIR}${REPO}/$(date +%s)"
+HOST="lana@$4"
+REPODIR="/home/lana/repos/${REPO}/"
 
-cd $REPOSDIR$REPO
+# Execute remaining commands in project directory
+cd $REPODIR
+
+# Fetch changes to project repository
 git fetch origin
+git checkout "$BRANCH"
 git merge "origin/${BRANCH}" -X theirs
 
+# Run unit tests if user passed "true" to test
+LOGDIR="/home/lana/logs/${REPO}/"
+TMPFILE="${LOGDIR}TEMP"
+ERRFILE="${LOGDIR}ERR"
+LOGFILE="${LOGDIR}$(date +%s)"
 
 if [ "$TEST" = "true" ]
 then
@@ -36,7 +43,28 @@ then
     fi
 fi
 
-docker build -t="${REPO}" .
-docker save -o "${REPOSDIR}${REPO}.tar" "${REPO}"
+# Build & save Docker image
+LOCALIMGDIR="/home/lana/local-images/"
+NAME=$(echo "$REPO" | sed -e 's/\//_/g')
+IMGFILE="${NAME}.tar"
+LOCALPATH="${LOCALIMGDIR}${IMGFILE}"
+
+docker build -t="${NAME}" .
+docker save -o "${LOCALPATH}" "${NAME}"
+
+# Deploy Docker image to remote host
+REMOTEIMGDIR="/home/lana/remote-images/"
+REMOTEPATH="${REMOTEIMGDIR}${IMGFILE}"
+
+scp "$LOCALPATH" "${HOST}:${REMOTEPATH}"
+
+LOADCMD="docker load -i ${REMOTEPATH}"
+ssh "${HOST}" "${LOADCMD}"
+
+KILLCMD="docker kill ${NAME}"
+ssh "${HOST}" "${KILLCMD}"
+
+RUNCMD="docker run -d -name ${NAME} ${NAME}"
+ssh "${HOST}" "${RUNCMD}"
 
 exit 0

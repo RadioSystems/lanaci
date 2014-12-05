@@ -53,6 +53,7 @@ service docker restart
 # Create repos & logs directories
 sudo -u lana mkdir /home/lana/repos
 sudo -u lana mkdir /home/lana/logs
+sudo -u lana mkdir /home/lana/local-images
 
 # Add SSH Keys
 sudo -u lana ssh-keygen -t rsa -C "lana@example.com"

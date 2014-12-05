@@ -14,8 +14,6 @@ then
     exit 2
 fi
 
-REPOSDIR="/home/lana/repos/"
-LOGSDIR="/home/lana/logs/"
 PROVIDER="$1"
 REPO="$2"
 URL=""
@@ -33,7 +31,10 @@ case "${PROVIDER}" in
         ;;
 esac
 
-CMD="git clone ${URL} ${REPOSDIR}${REPO}"
+REPODIR="/home/lana/repos/${REPO}"
+LOGDIR="/home/lana/logs/${REPO}"
+
+CMD="git clone ${URL} ${REPODIR}"
 sudo -u lana $CMD
 
 x=0
@@ -41,11 +42,11 @@ for i in $*
 do
     if [ $x -gt 1 ]
     then
-        CMD="cd ${REPOSDIR}${REPO} && git checkout --track origin/${i}"
+        CMD="cd ${REPODIR} && git checkout --track origin/${i}"
         sudo -u lana $CMD
     fi
     x=$(($x+1))
 done
 
-CMD="mkdir -p ${LOGSDIR}${REPO}"
+CMD="mkdir -p ${LOGDIR}"
 sudo -u lana $CMD

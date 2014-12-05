@@ -12,9 +12,11 @@ describe('lib/misc', function() {
             "repo/path": {
                 "branch": {
                     "test": true
+                  , "host": "branch.example.com"
                 }
               , "other_branch": {
                     "test": false
+                  , "host": "other.branch.example.com"
                 }
             }
           }
@@ -22,9 +24,11 @@ describe('lib/misc', function() {
             "github/repo": {
                 "another_branch": {
                     "test": true
+                  , "host": "another.branch.example.com"
                 }
               , "yet_another_branch": {
                     "test": false
+                  , "host": "yet.another.branch.example.com"
                 }
             }
           }
