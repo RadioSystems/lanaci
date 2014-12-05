@@ -12,11 +12,9 @@ describe('lib/misc', function() {
             "repo/path": {
                 "branch": {
                     "test": true
-                  , "build": true
                 }
               , "other_branch": {
                     "test": false
-                  , "build": false
                 }
             }
           }
@@ -24,13 +22,9 @@ describe('lib/misc', function() {
             "github/repo": {
                 "another_branch": {
                     "test": true
-                  , "build": true
-
                 }
               , "yet_another_branch": {
                     "test": false
-                  , "build": false
-
                 }
             }
           }

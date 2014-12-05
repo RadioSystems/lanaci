@@ -2,8 +2,6 @@ var hooks = require(__dirname + '/../lib/hooks')
   , task  = require(__dirname + '/../lib/task')
 ;
 
-
-
 var integrate = exports.integrate = function(req, res, next) {
   var combos = hooks.handleHooks(req);
 
@@ -15,6 +13,6 @@ var integrate = exports.integrate = function(req, res, next) {
   res.end();
 
   for (var i = 0; i < combos.length; i++) {
-    task(combos[i][0], combos[i][1]);
+    task(combos[i]);
   }
 };

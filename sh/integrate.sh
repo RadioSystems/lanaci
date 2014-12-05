@@ -1,16 +1,16 @@
 #!/bin/sh
-REPOSDIR=/home/lana/repos/
+REPOSDIR="/home/lana/repos/"
 ERRFILE=$REPOSDIR$(od -t uI -N 4 /dev/urandom | awk '{print $2}')
 REPO=$1
 BRANCH=$2
 TEST=$3
-CONTAIN=$4
+BUILD=$4
 
 cd $REPOSDIR$REPO
 git fetch origin
-git merge origin/$BRANCH -X theirs
+git merge "origin/$BRANCH" -X theirs
 
-if [ $TEST = "true" ]
+if [ "$TEST" = "true" ]
 then
     npm test 2> $ERRFILE
     if [ -s $ERRFILE ]
@@ -21,10 +21,10 @@ then
     fi
 fi
 
-if [ $CONTAIN = "true" ]
+if [ "$BUILD" = "true" ]
 then
-    docker build -t=$REPO .
-    docker save -o $REPOSDIR$REPO.tar $REPO
+    docker build -t="$REPO" .
+    docker save -o "$REPOSDIR$REPO.tar" "$REPO"
 fi
 
 exit 

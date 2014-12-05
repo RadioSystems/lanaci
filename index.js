@@ -1,13 +1,19 @@
-var restify   = require('restify')
-  , routes    = require(__dirname + '/routes')
-  , integrate = routes.integrate
-  ;
-
-var server = restify.createServer();
-server.use(restify.bodyParser({ mapParams: false }));
-
-server.post('/', integrate);
-
-server.listen(8080, function () {
-  console.log('%s listening at %s', server.name, server.url);
+var daemon = require("daemonize2").setup({
+    main: "app.js",
+    name: "lana",
+    pidfile: "lana.pid"
 });
+
+switch (process.argv[2]) {
+
+    case "start":
+        daemon.start();
+        break;
+
+    case "stop":
+        daemon.stop();
+        break;
+
+    default:
+        console.log("Usage: [start|stop]");
+}

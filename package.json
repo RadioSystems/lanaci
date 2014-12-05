@@ -1,13 +1,13 @@
 {
   "name": "ballin-lana",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple continuous integration solution for Node.js",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm install",
+    "postinstall": "./sh/install.sh",
     "test": "./node_modules/mocha/bin/mocha test/*.js",
-    "prestart": "NODE_ENV=production npm install",
-    "start": "node index.js"
+    "start": "node index.js start",
+    "stop": "node index.js stop"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/elzair/ballin-lana",
   "dependencies": {
+    "daemonize2": "^0.4.2",
     "deep-equal": "^0.2.1",
     "node-mocks-http": "^1.2.1",
     "restify": "^2.8.3"

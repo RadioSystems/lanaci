@@ -58,7 +58,6 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               test: true
-            , build: true
           }
         });
       });
@@ -200,7 +199,6 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               test: true
-            , build: true
           }
         });
         expect(combos[1]).to.deep.equal({
@@ -208,7 +206,6 @@ describe('lib/hooks', function() {
           , branch: 'other_branch'
           , conf: {
               test: false 
-            , build: false
           }
         });
       });
@@ -397,7 +394,6 @@ describe('lib/hooks', function() {
           , branch: 'another_branch'
           , conf: {
               test: true
-            , build: true
           }
         });
       });

@@ -1,0 +1,14 @@
+description "Job that runs the lana daemon"
+
+# start in normal runlevels when disks are mounted and networking is available
+start on runlevel [2345]
+
+# stop on shutdown/halt, single-user mode and reboot
+stop on runlevel [016]
+
+env statedir=/var/cache/lana
+
+# create a directory needed by the daemon
+pre-start exec mkdir -p "$statedir"
+
+exec /usr/local/bin/npm --arg1 "start" --statedir "$statedir"
