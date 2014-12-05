@@ -1,5 +1,7 @@
+#!/usr/bin/env node
+//-*- mode: js -*-
 var daemon = require("daemonize2").setup({
-    main: "app.js",
+    main: __dirname + "/../app.js",
     name: "lana",
     pidfile: "lana.pid"
 });
