@@ -4,7 +4,6 @@ ERRFILE=$REPOSDIR$(od -t uI -N 4 /dev/urandom | awk '{print $2}')
 REPO=$1
 BRANCH=$2
 TEST=$3
-BUILD=$4
 
 cd $REPOSDIR$REPO
 git fetch origin
@@ -21,10 +20,7 @@ then
     fi
 fi
 
-if [ "$BUILD" = "true" ]
-then
-    docker build -t="$REPO" .
-    docker save -o "$REPOSDIR$REPO.tar" "$REPO"
-fi
+docker build -t="$REPO" .
+docker save -o "$REPOSDIR$REPO.tar" "$REPO"
 
 exit 
