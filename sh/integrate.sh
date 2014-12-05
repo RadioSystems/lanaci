@@ -1,24 +1,38 @@
 #!/bin/sh
 REPOSDIR="/home/lana/repos/"
 LOGSDIR="/home/lana/logs/"
-TMPFILE="${LOGSDIR}TEMP"
-LOGFILE="${LOGSDIR}$(date +%s)"
 REPO=$1
 BRANCH=$2
 TEST=$3
+TMPFILE="${LOGSDIR}${REPO}/TEMP"
+ERRFILE="${LOGSDIR}${REPO}/ERR"
+LOGFILE="${LOGSDIR}${REPO}/$(date +%s)"
 
 cd $REPOSDIR$REPO
 git fetch origin
 git merge "origin/${BRANCH}" -X theirs
 
+
 if [ "$TEST" = "true" ]
 then
-    npm test 2> $TMPFILE
-    if [ ! -s $TMPFILE ]
+    npm test 1> $TMPFILE 2> $ERRFILE
+    touch $TMPFILE
+    touch $ERRFILE
+    if [ ! -s $ERRFILE ]
     then
-        cat $TMPFILE > $LOGFILE
+        cat $ERRFILE > $LOGFILE
         rm $TMPFILE
+        rm $ERRFILE
         exit 1
+    elif [ $? -neq 0 ]
+    then
+        cat $TMPFILE $ERRFILE > $LOGFILE
+        rm $TMPFILE
+        rm $ERRFILE
+        exit 1
+    else
+        rm $TMPFILE
+        rm $ERRFILE
     fi
 fi
 
