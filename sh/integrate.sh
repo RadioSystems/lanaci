@@ -1,26 +1,28 @@
 #!/bin/sh
 REPOSDIR="/home/lana/repos/"
-ERRFILE=$REPOSDIR$(od -t uI -N 4 /dev/urandom | awk '{print $2}')
+LOGSDIR="/home/lana/logs/"
+TMPFILE="${LOGSDIR}TEMP"
+LOGFILE="${LOGSDIR}$(date +%s)"
 REPO=$1
 BRANCH=$2
 TEST=$3
 
 cd $REPOSDIR$REPO
 git fetch origin
-git merge "origin/$BRANCH" -X theirs
+git merge "origin/${BRANCH}" -X theirs
 
 if [ "$TEST" = "true" ]
 then
-    npm test 2> $ERRFILE
-    if [ -s $ERRFILE ]
+    npm test 2> $TMPFILE
+    if [ ! -s $TMPFILE ]
     then
-        cat $ERRFILE 2>&1
-        rm $ERRFILE
+        cat $TMPFILE > $LOGFILE
+        rm $TMPFILE
         exit 1
     fi
 fi
 
-docker build -t="$REPO" .
-docker save -o "$REPOSDIR$REPO.tar" "$REPO"
+docker build -t="${REPO}" .
+docker save -o "${REPOSDIR}${REPO}.tar" "${REPO}"
 
-exit 
+exit 0

@@ -1,0 +1,54 @@
+#!/bin/sh
+
+USAGE="Usage: $0 [-h] repository <bitbucket|github> [branches...]"
+
+if [ "$1" = "-h" ]
+then
+    echo "$USAGE"
+    exit 0
+fi
+
+if [ $# -lt 2 ]
+then
+    echo "$USAGE" >&2
+    exit 2
+fi
+
+REPOSDIR="/home/lana/repos/"
+LOGSDIR="/home/lana/logs/"
+PROVIDER="$1"
+REPO="$2"
+URL=""
+
+case "${PROVIDER}" in
+    bitbucket)
+        URL="ssh://git@bitbucket.org:${REPO}.git"
+        ;;
+    github)
+        URL="ssh://git@github.com:${REPO}.git"
+        ;;
+    *)
+        echo "Unknown provider: ${PROVIDER}" >&2
+        exit 1
+        ;;
+esac
+
+CMD="git clone ${URL} ${REPOSDIR}${REPO}"
+echo "sudo -u lana $CMD"
+#sudo -u lana $CMD
+
+x=0
+for i in $*
+do
+    if [ $x -gt 1 ]
+    then
+        CMD="cd ${REPOSDIR}${REPO} && git checkout --track origin/${i}"
+        echo "sudo -u lana $CMD"
+        #sudo -u lana $CMD
+    fi
+    x=$(($x+1))
+done
+
+CMD="mkdir -p ${LOGSDIR}${REPO}"
+echo "sudo -u lana $CMD"
+#sudo -u lana $CMD

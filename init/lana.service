@@ -11,4 +11,4 @@ env statedir=/var/cache/lana
 # create a directory needed by the daemon
 pre-start exec mkdir -p "$statedir"
 
-exec /usr/local/bin/npm --arg1 "start" --statedir "$statedir"
+exec /usr/local/bin/lanactl --arg1 "start" --statedir "$statedir"

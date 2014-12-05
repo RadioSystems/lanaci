@@ -2,6 +2,7 @@
 
 # Process input arguments
 INIT=''
+USAGE="Usage: $0 [-h] [--init[=]<upstart|systemd>]" 
 optspec=":h-:"
 while getopts "$optspec" optchar
 do
@@ -17,22 +18,25 @@ do
                             ;;
                         *)
                             echo "Unknown init: ${INIT}" >&2
+                            echo "$USAGE" >&2
                             exit 1
                             ;;
                     esac
                     ;;
                 *)
                     echo "Unknown option --${OPTARG}" >&2
+                    echo "$USAGE" >&2
                     exit 2
                     ;;
             esac
             ;;
         h)
-            echo "usage: $0 [-h] [--init[=]<upstart|systemd>]" >&2
-            exit 4 
+            echo "$USAGE"
+            exit 0 
             ;;
         *)
             echo "Unknown argument: '-${OPTARG}'" >&2
+            echo "$USAGE" >&2
             exit 3
             ;;
     esac
@@ -46,8 +50,9 @@ useradd -m -s /bin/false -d /home/lana lana
 gpasswd -a lana docker
 service docker restart
 
-# Create repos directory
+# Create repos & logs directories
 sudo -u lana mkdir /home/lana/repos
+sudo -u lana mkdir /home/lana/logs
 
 # Add SSH Keys
 sudo -u lana ssh-keygen -t rsa -C "lana@example.com"
