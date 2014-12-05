@@ -34,8 +34,7 @@ case "${PROVIDER}" in
 esac
 
 CMD="git clone ${URL} ${REPOSDIR}${REPO}"
-echo "sudo -u lana $CMD"
-#sudo -u lana $CMD
+sudo -u lana $CMD
 
 x=0
 for i in $*
@@ -43,12 +42,10 @@ do
     if [ $x -gt 1 ]
     then
         CMD="cd ${REPOSDIR}${REPO} && git checkout --track origin/${i}"
-        echo "sudo -u lana $CMD"
-        #sudo -u lana $CMD
+        sudo -u lana $CMD
     fi
     x=$(($x+1))
 done
 
 CMD="mkdir -p ${LOGSDIR}${REPO}"
-echo "sudo -u lana $CMD"
-#sudo -u lana $CMD
+sudo -u lana $CMD

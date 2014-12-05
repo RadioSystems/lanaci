@@ -1,12 +1,12 @@
 {
   "name": "lana",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "./sh/install.sh",
     "test": "./node_modules/mocha/bin/mocha test/*.js",
-    "start": "./bin/lanactl start",
-    "stop": "./bin/lanactl stop"
+    "start": "node index.js start",
+    "stop": "node index.js stop"
   },
   "repository": {
     "type": "git",
