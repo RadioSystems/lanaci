@@ -54,5 +54,5 @@ sudo -u lana ssh-keygen -t rsa -C "lana@example.com"
 sudo -u lana cat /home/lana/.ssh/id_rsa.pub
 echo "Add the previous line to the list of SSH keys for your git host account."
 
-# Give lana ownership of /usr/local/lib/node_modules/ballin-lana 
-chown -R lana:lana /usr/local/lib/node_modules/ballin-lana
+# Give lana ownership of /usr/local/lib/node_modules/lana 
+chown -R lana:lana /usr/local/lib/node_modules/lana
