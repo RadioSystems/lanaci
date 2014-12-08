@@ -1,9 +1,9 @@
 {
   "name": "lana",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
-    "postinstall": "sudo ./sh/install.sh",
+    "postinstall": "echo Now run sudo install-lana to finish installation",
     "test": "./node_modules/mocha/bin/mocha test/*.js",
     "start": "node index.js start",
     "stop": "node index.js stop"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GLOBALNODEMODULES="/usr/local/lib/node_modules/"
+GLOBALNODEMODULES="/usr/lib/node_modules/"
 
 # Add user
 sudo useradd -m -s /bin/false -d /home/lana lana
