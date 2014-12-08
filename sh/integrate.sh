@@ -4,9 +4,33 @@ REPO=$1
 BRANCH=$2
 TEST=$3
 HOST="lana@$4"
-REPODIR="/home/lana/repos/${REPO}/"
+LANGUAGE=$5
+
+# Determine command to use to run unit tests
+case "$LANGUAGE" in
+    nodejs)
+        TESTCMD="npm test"
+        ;;
+    clojure)
+        TESTCMD="lein test"
+        ;;
+    go)
+        TESTCMD="go test"
+        ;;
+    ruby)
+        TESTCMD="rake test"
+        ;;
+    rust)
+        TESTCMD="rustc --test *.rs"
+        ;;
+    *)
+        echo "Unknown language: $LANGUAGE" >&2
+        exit 1
+        ;;
+esac
 
 # Execute remaining commands in project directory
+REPODIR="/home/lana/repos/${REPO}/"
 cd $REPODIR
 
 # Fetch changes to project repository
@@ -22,7 +46,7 @@ LOGFILE="${LOGDIR}$(date +%s)"
 
 if [ "$TEST" = "true" ]
 then
-    npm test 1> $TMPFILE 2> $ERRFILE
+    $TESTCMD 1> $TMPFILE 2> $ERRFILE
     touch $TMPFILE
     touch $ERRFILE
     if [ ! -s $ERRFILE ]

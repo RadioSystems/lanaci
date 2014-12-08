@@ -13,10 +13,12 @@ describe('lib/misc', function() {
                 "branch": {
                     "test": true
                   , "host": "branch.example.com"
+                  , "language": "nodejs"
                 }
               , "other_branch": {
                     "test": false
                   , "host": "other.branch.example.com"
+                  , "language": "go"
                 }
             }
           }
@@ -25,10 +27,12 @@ describe('lib/misc', function() {
                 "another_branch": {
                     "test": true
                   , "host": "another.branch.example.com"
+                  , "language": "clojure"
                 }
               , "yet_another_branch": {
                     "test": false
                   , "host": "yet.another.branch.example.com"
+                  , "language": "ruby"
                 }
             }
           }

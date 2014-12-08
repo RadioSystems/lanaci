@@ -59,6 +59,7 @@ describe('lib/hooks', function() {
           , conf: {
               test: true
             , host: 'branch.example.com'
+            , language: 'nodejs'
           }
         });
       });
@@ -201,6 +202,7 @@ describe('lib/hooks', function() {
           , conf: {
               test: true
             , host: 'branch.example.com'
+            , language: 'nodejs'
           }
         });
         expect(combos[1]).to.deep.equal({
@@ -209,6 +211,7 @@ describe('lib/hooks', function() {
           , conf: {
               test: false 
             , host: 'other.branch.example.com'
+            , language: 'go'
           }
         });
       });
@@ -398,6 +401,7 @@ describe('lib/hooks', function() {
           , conf: {
               test: true
             , host: 'another.branch.example.com'
+            , language: 'clojure'
           }
         });
       });
