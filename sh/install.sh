@@ -3,11 +3,11 @@
 GLOBALNODEMODULES="/usr/local/lib/node_modules/"
 
 # Add user
-useradd -m -s /bin/false -d /home/lana lana
+sudo useradd -m -s /bin/false -d /home/lana lana
 
 # Give user non-sudo access to docker
-gpasswd -a lana docker
-service docker restart
+sudo gpasswd -a lana docker
+sudo service docker restart
 
 # Create repos & logs directories
 sudo -u lana mkdir /home/lana/repos
