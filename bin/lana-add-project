@@ -38,12 +38,14 @@ LOGDIR="/home/lana/logs/${REPO}"
 CMD="git clone ${URL} ${REPODIR}"
 sudo -u lana $CMD
 
+cd $REPODIR
+
 x=0
 for i in $*
 do
     if [ $x -gt 2 ]
     then
-        CMD="cd ${REPODIR} && git checkout --track origin/${i}"
+        CMD="git checkout --track origin/${i}"
         sudo -u lana $CMD
     fi
     x=$(($x+1))

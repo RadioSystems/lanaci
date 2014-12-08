@@ -1,6 +1,6 @@
 {
   "name": "lana",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "echo Now run sudo install-lana to finish installation",
