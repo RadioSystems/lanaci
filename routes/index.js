@@ -34,9 +34,16 @@ var display = exports.display = function(req, res, next) {
     if (conf.hasOwnProperty(repo)) {
       for (var branch in conf[repo]) {
         if (conf[repo].hasOwnProperty(branch)) {
-          var dir = fs.raddirSynx(path.join(repodir, repo, branch));
-          var m = misc.max(dir);
-          var file = fs.readFileSync(path.join(dir, m));
+          var dir = fs.readdirSynx(path.join(repodir, repo, branch));
+
+          var file = '';
+          if (dir.length > 0) {
+            var m = misc.max(dir);
+            file = fs.readFileSync(path.join(dir, m));
+          }
+          else {
+            file = '';
+          }
 
           data.projects.push({
               complete: file.length > 0 ? true: false
