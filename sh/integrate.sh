@@ -44,6 +44,8 @@ TMPFILE="${LOGDIR}TEMP"
 ERRFILE="${LOGDIR}ERR"
 LOGFILE="${LOGDIR}$(date +%s)"
 
+touch $LOGFILE
+
 if [ "$TEST" = "true" ]
 then
     $TESTCMD 1> $TMPFILE 2> $ERRFILE

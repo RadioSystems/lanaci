@@ -1,5 +1,10 @@
-var hooks = require(__dirname + '/../lib/hooks')
-  , task  = require(__dirname + '/../lib/task')
+var fs         = require('fs')
+  , handlebars = require('handlebars')
+  , hooks      = require(__dirname + '/../lib/hooks')
+  , misc       = require(__dirname + '/../lib/misc')
+  , path       = require('path')
+  , task       = require(__dirname + '/../lib/task')
+  , util       = require('util')
 ;
 
 var integrate = exports.integrate = function(req, res, next) {
@@ -15,4 +20,36 @@ var integrate = exports.integrate = function(req, res, next) {
   for (var i = 0; i < combos.length; i++) {
     task(combos[i]);
   }
+};
+
+var display = exports.display = function(req, res, next) {
+  var conf = misc.readConf('repos.json');
+  var repodir = '/home/lana/repos/';
+  var dirs = [];
+  var data = {
+    projects: []
+  };
+
+  for (var repo in conf) {
+    if (conf.hasOwnProperty(repo)) {
+      for (var branch in conf[repo]) {
+        if (conf[repo].hasOwnProperty(branch)) {
+          var dir = fs.raddirSynx(path.join(repodir, repo, branch));
+          var m = misc.max(dir);
+          var file = fs.readFileSync(path.join(dir, m));
+
+          data.projects.push({
+              complete: file.length > 0 ? true: false
+            , output: file
+          });
+        }
+      }
+    }
+  }
+
+  var template = fs.readFileSync(__dirname + '/../frontend/template.html');
+  var html = handlebars.compile(template)(data);
+
+  res.send(200, html);
+  res.end();
 };

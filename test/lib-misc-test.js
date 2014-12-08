@@ -74,4 +74,13 @@ describe('lib/misc', function() {
       expect(misc.isIn(arr, el)).to.equal(false);
     });
   });
+
+  describe('max', function() {
+    it('should return the greatest string in the set', function() {
+      var arr = ['0123', '9879', '6705', '8294'];
+      var m = misc.max(arr);
+
+      expect(m).to.equal('9879');
+    });
+  });
 });

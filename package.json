@@ -1,6 +1,6 @@
 {
   "name": "lana",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "./sh/install.sh",
@@ -25,6 +25,7 @@
   "dependencies": {
     "daemonize2": "^0.4.2",
     "deep-equal": "^0.2.1",
+    "handlebars": "^2.0.0",
     "node-mocks-http": "^1.2.1",
     "restify": "^2.8.3"
   },

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="Usage: $0 [-h] repository <bitbucket|github> [branches...]"
+USAGE="Usage: $0 [-h] <nodejs|go|ruby|clojure|rust> <bitbucket|github> repository [branches...]"
 
 if [ "$1" = "-h" ]
 then
@@ -8,14 +8,15 @@ then
     exit 0
 fi
 
-if [ $# -lt 2 ]
+if [ $# -lt 3 ]
 then
     echo "$USAGE" >&2
     exit 2
 fi
 
-PROVIDER="$1"
-REPO="$2"
+LANGUAGE="$1"
+PROVIDER="$2"
+REPO="$3"
 URL=""
 
 case "${PROVIDER}" in
@@ -40,7 +41,7 @@ sudo -u lana $CMD
 x=0
 for i in $*
 do
-    if [ $x -gt 1 ]
+    if [ $x -gt 2 ]
     then
         CMD="cd ${REPODIR} && git checkout --track origin/${i}"
         sudo -u lana $CMD
