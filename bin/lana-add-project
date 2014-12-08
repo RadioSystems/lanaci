@@ -21,10 +21,10 @@ URL=""
 
 case "${PROVIDER}" in
     bitbucket)
-        URL="ssh://git@bitbucket.org:${REPO}.git"
+        URL="git@bitbucket.org:${REPO}.git"
         ;;
     github)
-        URL="ssh://git@github.com:${REPO}.git"
+        URL="git@github.com:${REPO}.git"
         ;;
     *)
         echo "Unknown provider: ${PROVIDER}" >&2
