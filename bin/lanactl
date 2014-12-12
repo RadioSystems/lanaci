@@ -21,7 +21,7 @@ else
     exit 1
 fi
 
-set -- $(/home/elzair/Development/Nodejs/lana/tools/arg-parser $*)
+set -- $(${SCRIPTLOC}/../tools/arg-parser $*)
 HOST="$1"
 LANGUAGE="$2"
 PROVIDER="$3"
@@ -35,14 +35,12 @@ echo $HOST $LANGUAGE $PROVIDER $REPOSITORY $URL $BRANCHES
 
 case "$PROVIDER" in
     bitbucket)
-        PROVIDER_URL="git@bitbucket.org:${REPO}.git"
         ;;
     github)
-        PROVIDER_URL="git@github.com:${REPO}.git"
         ;;
     *)
         echo "Unknown provider: ${PROVIDER}" >&2
-        exit 5
+        exit 2
         ;;
 esac
 
@@ -55,27 +53,30 @@ echo "sudo -u lana $CMD"
 if [ "$?" != "0" ]
 then
     echo "Error cloning repository ${URL} to ${REPODIR}" >&2
-    exit 6 
+    exit 3
 fi
-
-# Create Log Directory if it does not already exist
-
-LOGDIR="/home/lana/logs/${REPOSITORY}"
-CMD="mkdir -p ${LOGDIR}"
-echo "sudo -u lana $CMD"
 
 if [ "$?" != "0" ]
 then
     echo "Error creating log directory: ${LOGDIR}" >&2
-    exit 7
+    exit 4
 fi
 
 # Begin tracking any new branches
 
 echo "cd $REPODIR"
 
+x=1
 for i in $*
 do
-    CMD="git checkout --track origin/${i}"
-    echo "sudo -u lana $CMD"
+    if [ $x -gt 5 ]
+    then
+        LOGDIR="/home/lana/logs/${REPOSITORY}/${i}"
+        CMD="mkdir -p ${LOGDIR}"
+        echo "sudo -u lana $CMD"
+        CMD="git checkout --track origin/${i}"
+        echo "sudo -u lana $CMD"
+    fi
+
+    x=$(($x+1))
 done

@@ -23,11 +23,12 @@ if (url === '') {
   }
 }
 
-var branches = '', separator = '';
+var branches = '';
+
 for (var i = 0; i < argv['_'].length; i++) {
-  branches = branches + separator + argv['_'][i];
-  separator = ' ';
+  branches = branches + ' ' + argv['_'][i];
 }
-var out = util.format('%s %s %s %s %s "%s"', host, language, provider,
+
+var out = util.format('%s %s %s %s %s %s', host, language, provider,
                       repository, url, branches);
 console.log(out);
