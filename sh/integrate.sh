@@ -40,8 +40,8 @@ git merge "origin/${BRANCH}" -X theirs
 
 # Run unit tests if user passed "true" to test
 LOGDIR="/home/lana/logs/${REPO}/"
-TMPFILE="${LOGDIR}TEMP"
-ERRFILE="${LOGDIR}ERR"
+TMPFILE="${LOGDIR}TEMP-$(date +%s)"
+ERRFILE="${LOGDIR}ERR-$(date +%s)"
 LOGFILE="${LOGDIR}$(date +%s)"
 
 touch $LOGFILE
