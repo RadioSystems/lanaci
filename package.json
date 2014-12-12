@@ -32,6 +32,7 @@
     "daemonize2": "^0.4.2",
     "deep-equal": "^0.2.1",
     "handlebars": "^2.0.0",
+    "minimist": "^1.1.0",
     "node-mocks-http": "^1.2.1",
     "restify": "^2.8.3"
   },

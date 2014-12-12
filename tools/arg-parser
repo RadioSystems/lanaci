@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+
+var argv = require('minimist')(process.argv.slice(3))
+  , util = require('util');
+
+var host       = argv.h || argv.host || '127.0.0.1'
+  , language   = argv.l || argv.language || 'nodejs'
+  , provider   = argv.p || argv.provider || 'github'
+  , repository = argv.r || argv.repository || ''
+  , url        = argv.u || argv.url || ''
+  ;
+
+// Handle case of default URLs
+if (url === '') {
+  switch(provider) {
+    case 'bitbucket':
+      url = util.format('git@bitbucket.org:%s.git', repository);
+      break;
+    default:
+      url = util.format('git@github.com:%s.git', repository);
+      break;
+  }
+}
+
+var branches = '', separator = '';
+for (var i = 0; i < argv['_'].length; i++) {
+  branches = branches + separator + argv['_'][i];
+  separator = ' ';
+}
+var out = util.format('%s %s %s %s %s "%s"', host, language, provider,
+                      repository, url, branches);
+console.log(out);

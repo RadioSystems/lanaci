@@ -1,6 +1,81 @@
 #!/bin/sh
 
-LOC=$(readlink -f "$0")
-INDEXFILE="$(dirname ${LOC})/../index.js"
-CMD="node ${INDEXFILE} $*"
-sudo -u lana $CMD
+SCRIPTNAME="$0"
+SCRIPTLOC=$(dirname $(readlink -f "$SCRIPTNAME"))
+
+USAGE="Usage: $SCRIPTNAME <start|stop|add>\n Add Options:\n\t-h --host\tSpecify remote host\n\t-l --language\tProgramming language of application\n\t-p --provider\tCode host that provides webhooks <github|bitbucket>\n\t-r --repository\tName of repository\n\t-u --url\tURL of private code repositoryn"
+
+LANACMD="$1"
+
+if [ "$LANACMD" = "start" -o "$LANACMD" = "stop" ]
+then
+    INDEXFILE="${SCRIPTLOC}/../index.js"
+    CMD="node ${INDEXFILE} $*"
+    echo "sudo -u lana $CMD"
+    exit 0
+elif [ "$LANACMD" = "add" ]
+then
+    echo "Adding repository"
+else
+    echo "$USAGE" >&2
+    exit 1
+fi
+
+set -- $(/home/elzair/Development/Nodejs/lana/tools/arg-parser $*)
+HOST="$1"
+LANGUAGE="$2"
+PROVIDER="$3"
+REPOSITORY="$4"
+URL="$5"
+BRANCHES="$6"
+
+echo $HOST $LANGUAGE $PROVIDER $REPOSITORY $URL $BRANCHES
+
+# Validate $PROVIDER
+
+case "$PROVIDER" in
+    bitbucket)
+        PROVIDER_URL="git@bitbucket.org:${REPO}.git"
+        ;;
+    github)
+        PROVIDER_URL="git@github.com:${REPO}.git"
+        ;;
+    *)
+        echo "Unknown provider: ${PROVIDER}" >&2
+        exit 5
+        ;;
+esac
+
+# Clone repository if it does not already exist
+
+REPODIR="/home/lana/repos/${REPOSITORY}"
+CMD="git clone ${URL} ${REPODIR}"
+echo "sudo -u lana $CMD"
+
+if [ "$?" != "0" ]
+then
+    echo "Error cloning repository ${URL} to ${REPODIR}" >&2
+    exit 6 
+fi
+
+# Create Log Directory if it does not already exist
+
+LOGDIR="/home/lana/logs/${REPOSITORY}"
+CMD="mkdir -p ${LOGDIR}"
+echo "sudo -u lana $CMD"
+
+if [ "$?" != "0" ]
+then
+    echo "Error creating log directory: ${LOGDIR}" >&2
+    exit 7
+fi
+
+# Begin tracking any new branches
+
+echo "cd $REPODIR"
+
+for i in $*
+do
+    CMD="git checkout --track origin/${i}"
+    echo "sudo -u lana $CMD"
+done
