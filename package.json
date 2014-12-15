@@ -17,7 +17,8 @@
   },
   "keywords": [
     "ci",
-    "continuousintegration"
+    "continuousintegration",
+    "docker"
   ],
   "author": "Philip Woods",
   "license": "MIT",
