@@ -1,17 +1,14 @@
 {
   "name": "lana",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "Now run sudo install-lana to finish installation",
-    "test": "./node_modules/mocha/bin/mocha --harmony-generators test/*.js",
-    "start": "node --harmony-generators index.js start",
-    "stop": "node --harmony-generators index.js stop"
+    "test": "./node_modules/mocha/bin/mocha --harmony-generators test/*.js"
   },
   "preferGlobal": true,
   "bin": {
     "install-lana": "./bin/install-lana",
-    "lana-add-project": "./bin/lana-add-project",
     "lanactl": "./bin/lanactl"
   },
   "repository": {

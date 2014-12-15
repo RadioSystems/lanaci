@@ -1,0 +1,7 @@
+{
+    "clojure": "lein test"
+  , "go":      "go test"
+  , "nodejs":  "npm test"
+  , "ruby":    "rake test"
+  , "rust":    "rustc --test *.rs"
+}

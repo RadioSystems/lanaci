@@ -2,6 +2,7 @@ var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
   , fs       = require('co-fs')
   , misc     = require(__dirname + '/../lib/misc')
+  , util     = require('util')
   ;
 
 describe('lib/misc', function() {
@@ -91,8 +92,9 @@ describe('lib/misc', function() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, error: null, stderr: ''};
       };
+      var logFile = util.format('/tmp/test-stdout-%d', Date.now());
 
-      yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+      yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
       var exists = yield fs.exists('/tmp/test');
 
       expect(exists).to.equal(false);
@@ -102,19 +104,20 @@ describe('lib/misc', function() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, err: {message: 'Write this'}, stderr: ''};
       };
+      var logFile = util.format('/tmp/test-err-%d', Date.now());
       var throwsErr = false;
 
       try {
-        yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+        yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
       }
       catch (err) {
-        expect(err.message).to.equal('Write this');
         throwsErr = true;
-        var exists = yield fs.exists('/tmp/test');
+        expect(err.message).to.equal('Write this');
+        var exists = yield fs.exists(logFile);
         expect(exists).to.equal(true);
-        var contents = yield fs.readFile('/tmp/test', 'utf8');
+        var contents = yield fs.readFile(logFile, 'utf8');
         expect(contents).to.equal('Write this');
-        yield fs.unlink('/tmp/test');
+        yield fs.unlink(logFile);
       }
       finally {
         expect(throwsErr).to.equal(true);
@@ -125,19 +128,20 @@ describe('lib/misc', function() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, err: null, stderr: 'Write this too'};
       };
+      var logFile = util.format('/tmp/test-stderr-%d', Date.now());
       var throwsStdErr = false;
 
       try {
-        yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+        yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
       }
       catch (err) {
         expect(err.message).to.equal('Write this too');
         throwsStdErr = true;
-        var exists = yield fs.exists('/tmp/test');
+        var exists = yield fs.exists(logFile);
         expect(exists).to.equal(true);
-        var contents = yield fs.readFile('/tmp/test', 'utf8');
+        var contents = yield fs.readFile(logFile, 'utf8');
         expect(contents).to.equal('Write this too');
-        yield fs.unlink('/tmp/test');
+        yield fs.unlink(logFile);
       }
       finally {
         expect(throwsStdErr).to.equal(true);
