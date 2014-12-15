@@ -417,9 +417,18 @@ describe('lib/hooks', function() {
             foo: "bar"
           }
         });
+        var throwsErr = false;
 
-        var error = yield hooks.handleHooks(invalidRequest, "repos.json.template");
-        expect(error).to.equal("Hook not supported");
+        try {
+          yield hooks.handleHooks(invalidRequest, "repos.json.template");
+        }
+        catch(err) {
+          throwsErr = true;
+          expect(err).to.equal("Hook not supported");
+        }
+        finally {
+          expect(throwsErr).to.equal(true);
+        }
       });
     });
   });
