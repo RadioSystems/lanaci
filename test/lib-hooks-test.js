@@ -1,12 +1,13 @@
-var expect = require('chai').expect
-, hooks  = require(__dirname + '/../lib/hooks')
-, mocks  = require('node-mocks-http')
+var co_mocha = require('co-mocha')
+  , expect   = require('chai').expect
+  , hooks    = require(__dirname + '/../lib/hooks')
+  , mocks    = require('node-mocks-http')
 ;
 
 describe('lib/hooks', function() {
   describe('handleHooks', function() {
     describe('bitbucket', function() {
-      it('should return the combos on a valid request', function() {
+      it('should return the combos on a valid request', function*() {
         var validRequest = mocks.createRequest({
           "method": "POST",
           "url": "/",
@@ -49,7 +50,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -64,7 +65,7 @@ describe('lib/hooks', function() {
         });
       });
       
-      it('should filter duplicate combos', function() {
+      it('should filter duplicate combos', function*() {
         var validRequest = mocks.createRequest({
           "method": "POST",
           "url": "/",
@@ -192,7 +193,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
@@ -218,7 +219,7 @@ describe('lib/hooks', function() {
     });
 
     describe('github', function() {
-      it('should return the combos on a valid request', function() {
+      it('should return the combos on a valid request', function*() {
         var validRequest = mocks.createRequest({
           "method": "POST",
           "url": "/",
@@ -391,7 +392,7 @@ describe('lib/hooks', function() {
           }
         });
 
-        var combos = hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -408,7 +409,7 @@ describe('lib/hooks', function() {
     });
 
     describe('error', function() {
-      it('should gracefully handle an invalid hook', function() {
+      it('should gracefully handle an invalid hook', function*() {
         var invalidRequest = mocks.createRequest({
           method: "POST",
           url: "/",
@@ -417,7 +418,7 @@ describe('lib/hooks', function() {
           }
         });
 
-        var error = hooks.handleHooks(invalidRequest, "repos.json.template");
+        var error = yield hooks.handleHooks(invalidRequest, "repos.json.template");
         expect(error).to.equal("Hook not supported");
       });
     });

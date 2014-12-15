@@ -1,11 +1,13 @@
-var expect = require('chai').expect
-  , misc = require(__dirname + '/../lib/misc')
+var co_mocha = require('co-mocha')
+  , expect   = require('chai').expect
+  , fs       = require('co-fs')
+  , misc     = require(__dirname + '/../lib/misc')
   ;
 
 describe('lib/misc', function() {
   describe('readConf', function() {
-    it('should read the file and return an object with its contents', function() {
-      var repos = misc.readConf('repos.json.template');
+    it('should read the file and return an object with its contents', function*() {
+      var repos = yield misc.readConf('repos.json.template');
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
           "bitbucket": {
@@ -81,6 +83,43 @@ describe('lib/misc', function() {
       var m = misc.max(arr);
 
       expect(m).to.equal('9879');
+    });
+  });
+
+  describe('processCommand', function () {
+    it('should process the command', function*() {
+      var exec = function* (cmd, opts) {
+        return {stdout: cmd, error: null, stderr: ''};
+      };
+
+      yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+      var exists = yield fs.exists('/tmp/test');
+
+      expect(exists).to.equal(false);
+    });
+
+    it('should write error.message to the error file', function*() {
+      var exec = function* (cmd, opts) {
+        return {stdout: cmd, err: {message: 'Write this'}, stderr: ''};
+      };
+      var throwsErr = false;
+
+      try {
+        yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+      }
+      catch (err) {
+        expect(err.message).to.equal('Write this');
+        throwsErr = true;
+        var exists = yield fs.exists('/tmp/test');
+        expect(exists).to.equal(true);
+        var contents = yield fs.readFile('/tmp/test', 'utf8');
+        expect(contents).to.equal('Write this');
+        yield fs.unlink('/tmp/test');
+      }
+      finally {
+        expect(throwsErr).to.equal(true);
+      }
+
     });
   });
 });
