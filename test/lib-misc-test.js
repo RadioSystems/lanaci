@@ -119,7 +119,29 @@ describe('lib/misc', function() {
       finally {
         expect(throwsErr).to.equal(true);
       }
+    });
 
+    it('should write stderr to the error file', function*() {
+      var exec = function* (cmd, opts) {
+        return {stdout: cmd, err: null, stderr: 'Write this too'};
+      };
+      var throwsStdErr = false;
+
+      try {
+        yield misc.processCommand('ls -al .', '/tmp', '/tmp/test', exec);
+      }
+      catch (err) {
+        expect(err.message).to.equal('Write this too');
+        throwsStdErr = true;
+        var exists = yield fs.exists('/tmp/test');
+        expect(exists).to.equal(true);
+        var contents = yield fs.readFile('/tmp/test', 'utf8');
+        expect(contents).to.equal('Write this too');
+        yield fs.unlink('/tmp/test');
+      }
+      finally {
+        expect(throwsStdErr).to.equal(true);
+      }
     });
   });
 });
