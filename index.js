@@ -24,7 +24,7 @@ var daemon = require('daemonize2').setup({
 var cmd = argv['_'][1];
 
 var addRepository = function*(args) {
-  var branches = args['_'].slice(2)
+  var branches   = args['_'].slice(2)
     , host       = args.h || args.host 
     , language   = args.l || args.language || 'nodejs'
     , provider   = args.p || args.provider || 'github'
