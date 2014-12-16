@@ -58,9 +58,8 @@ describe('lib/hooks', function() {
           repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              test: true
-            , host: 'branch.example.com'
-            , language: 'nodejs'
+              host: 'branch.example.com'
+            , test_commands: ['npm test']
           }
         });
       });
@@ -198,21 +197,19 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
         expect(combos[0]).to.deep.equal({
-          repo: 'repo/path'
+            repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              test: true
-            , host: 'branch.example.com'
-            , language: 'nodejs'
+              host: 'branch.example.com'
+            , test_commands: ['npm test']
           }
         });
         expect(combos[1]).to.deep.equal({
           repo: 'repo/path'
           , branch: 'other_branch'
           , conf: {
-              test: false 
-            , host: 'other.branch.example.com'
-            , language: 'go'
+              host: 'other.branch.example.com'
+            , test_commands: ['npm test']
           }
         });
       });
@@ -400,9 +397,8 @@ describe('lib/hooks', function() {
             repo: 'github/repo'
           , branch: 'another_branch'
           , conf: {
-              test: true
-            , host: 'another.branch.example.com'
-            , language: 'clojure'
+              host: 'another.branch.example.com'
+            , test_commands: ['lein test']
           }
         });
       });

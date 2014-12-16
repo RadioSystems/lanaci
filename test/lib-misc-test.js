@@ -11,33 +11,40 @@ describe('lib/misc', function() {
       var repos = yield misc.readConf('repos.json.template');
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
-          "bitbucket": {
-            "repo/path": {
-                "branch": {
-                    "test": true
-                  , "host": "branch.example.com"
-                  , "language": "nodejs"
+          "version": "0.0.1"
+        , "providers": {
+              "bitbucket": {
+                "repo/path": {
+                    "branch": {
+                        "host": "branch.example.com"
+                      , "test_commands": [
+                          "npm test"
+                        ]
+                    }
+                  , "other_branch": {
+                        "host": "other.branch.example.com"
+                      , "test_commands": [
+                          "npm test"
+                        ]
+                    }
                 }
-              , "other_branch": {
-                    "test": false
-                  , "host": "other.branch.example.com"
-                  , "language": "go"
+              }
+            , "github": {
+                "github/repo": {
+                    "another_branch": {
+                        "host": "another.branch.example.com"
+                      , "test_commands": [
+                          "lein test"
+                        ]
+                    }
+                  , "yet_another_branch": {
+                        "host": "yet.another.branch.example.com"
+                      , "test_commands": [
+                          "lein test"
+                        ]
+                    }
                 }
-            }
-          }
-        , "github": {
-            "github/repo": {
-                "another_branch": {
-                    "test": true
-                  , "host": "another.branch.example.com"
-                  , "language": "clojure"
-                }
-              , "yet_another_branch": {
-                    "test": false
-                  , "host": "yet.another.branch.example.com"
-                  , "language": "ruby"
-                }
-            }
+              } 
           }
       });
     });
