@@ -54,7 +54,7 @@ co(function* () {
     , 'Add Options:'
     , '\tName of repository'
     , '\tName of branch'
-    , '\t-H --host\tSpecify list of remote hosts'
+    , '\t-H --host\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
     , '\t-l --language\tProgramming language of application'
     , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
     , '\t-u --url\tURL of private code repository'
