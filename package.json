@@ -33,12 +33,12 @@
     "exec-co": "^1.3.0",
     "handlebars": "^2.0.0",
     "minimist": "^1.1.0",
-    "node-mocks-http": "^1.2.1",
     "restify": "^2.8.3"
   },
   "devDependencies": {
     "chai": "^1.10.0",
     "co-mocha": "^1.1.0",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "node-mocks-http": "^1.2.1"
   }
 }
