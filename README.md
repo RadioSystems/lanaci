@@ -1,5 +1,5 @@
-lana
-====
+lanaci
+======
 
 A simple continuous integration solution for Node.js
 

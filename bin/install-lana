@@ -3,21 +3,21 @@
 GLOBALNODEMODULES="$(npm root -g)"
 
 # Add user
-sudo useradd -m -s /bin/false -d /home/lana lana
+sudo useradd -m -s /bin/false -d /home/lanaci lanaci
 
 # Give user non-sudo access to docker
-sudo gpasswd -a lana docker
+sudo gpasswd -a lanaci docker
 sudo service docker restart
 
 # Create repos & logs directories
-sudo -u lana mkdir /home/lana/repos
-sudo -u lana mkdir /home/lana/logs
-sudo -u lana mkdir /home/lana/local-images
+sudo -u lanaci mkdir /home/lanaci/repos
+sudo -u lanaci mkdir /home/lanaci/logs
+sudo -u lanaci mkdir /home/lanaci/local-images
 
 # Add SSH Keys
-sudo -u lana ssh-keygen -t rsa -C "lana@example.com"
-sudo -u lana cat /home/lana/.ssh/id_rsa.pub
+sudo -u lanaci ssh-keygen -t rsa -C "lana@example.com"
+sudo -u lanaci cat /home/lanaci/.ssh/id_rsa.pub
 echo "Add the previous line to the list of SSH keys for your git host account."
 
-# Give lana ownership of lana module directory
-chown -R lana:lana "${GLOBALNODEMODULES}/lana"
+# Download the lanaci app
+sudo -u lanaci git clone 

@@ -1,117 +1,93 @@
 var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
+  , path     = require('path')
   , task     = require(__dirname + '/../lib/task')
+  , util     = require('util')
   ;
 
 describe('lib/task', function() {
   describe('integrate', function() {
-    it('should process a valid combination', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
+    var log, processCommand, handleError;
+
+    beforeEach(function*() {
+      log = [];
+      processCommand = function*(cmd, cwd) {
         log.push(cmd);
       };
+      handleError = function* (logFile, contents) {
+        throw contents;
+      };
+    });
+    
+    it('should process a valid combination', function*() {
       var combo = [
           'elzair/protolib'
         , 'test'
         , {
-              test: true
-            , host: 'example.com'
-            , language: 'nodejs'
+              host: 'example.com'
+            , test_commands: ["npm test"] 
           }
       ];
 
-      yield task.integrate(combo, processCommand, false);
+      yield task.integrate(combo, processCommand, handleError);
 
+      var homeDir = path.normalize(util.format('%s/..', __dirname));
       expect(log).to.deep.equal([
           'git fetch origin'
         , 'git checkout test'
         , 'git merge origin/test -X theirs'
         , 'npm test'
         , 'docker build -t=elzair/protolib .'
-        , 'docker save -o /home/lana/local-images/elzair_protolib.tar elzair/protolib'
-        , 'scp /home/lana/local-images/elzair_protolib.tar lana@example.com:/home/lana/remote-images/elzair_protolib.tar'
-        , 'ssh lana@example.com docker load -i /home/lana/remote-images/elzair_protolib.tar'
+        , 'docker save -o '+homeDir+'/local-images/elzair_protolib.tar elzair/protolib'
+        , 'scp '+homeDir+'/local-images/elzair_protolib.tar lana@example.com:'+homeDir+'/remote-images/elzair_protolib.tar'
+        , 'ssh lana@example.com docker load -i '+homeDir+'/remote-images/elzair_protolib.tar'
         , 'ssh lana@example.com docker kill elzair/protolib'
         , 'ssh lana@example.com docker run -d --name elzair/protolib elzair/protolib'
       ]);
     });
 
     it('should throw an error on an invalid host', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
-        log.push(cmd);
-      };
       var combo = [
           'elzair/protolib'
         , 'test'
         , {
-              test: true
-            , language: 'nodejs'
+              testCommands: ['npm test']
           }
       ]; 
       var throwsErr = false;
 
       try {
-        yield task.integrate(combo, processCommand, false);
+        yield task.integrate(combo, processCommand, handleError);
       }
       catch (err) {
         throwsErr = true;
-        expect(err).to.equal('Invalid host:  with project elzair/protolib');
+        expect(err).to.equal('Invalid host:  with project elzair/protolib and branch test');
       }
       finally {
         expect(throwsErr).to.equal(true);
       }
     });
- 
-    it('should throw an error on an invalid language', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
-        log.push(cmd);
-      };
-      var combo = [
-          'elzair/protolib'
-        , 'test'
-        , {
-              test: true
-            , host: 'example.com'
-            , language: 'no-lang'
-          }
-      ]; 
-      var throwsErr = false;
-
-      try {
-        yield task.integrate(combo, processCommand, false);
-      }
-      catch (err) {
-        throwsErr = true;
-        expect(err).to.equal('Invalid language: no-lang');
-      }
-      finally {
-        expect(throwsErr).to.equal(true);
-      }
-    });
- });
+  });
 
   describe('addRepository', function() {
-    it('should add a repository', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
-        log.push(cmd);
-      }; 
+    var log, processCommand;
 
-      yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'nodejs', 'github', true, '', processCommand);
-      console.log(log);
+    beforeEach(function*() {
+      log = [];
+      processCommand = function*(cmd, cwd) {
+        log.push(cmd);
+      };
+    });
+    
+    it('should add a repository', function*() {
+      yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'github', '', ['npm test'], processCommand);
     });
 
     it('should throw an error on an invalid repository', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
-        log.push(cmd);
-      }; 
       var throwsErr = false;
 
       try {
-        yield task.addRepository('', ['test'], 'example.com', 'nodejs', 'github', true, '', processCommand);
+        yield task.addRepository('', ['test'], 'example.com', 'github', '', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -123,14 +99,10 @@ describe('lib/task', function() {
     });
 
     it('should throw an error on an unsupported provider', function*() {
-      var log = [];
-      var processCommand = function*(cmd, cwd, logFile) {
-        log.push(cmd);
-      }; 
       var throwsErr = false;
 
       try {
-        yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'nodejs', 'sourceforge', true, '', processCommand);
+        yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'sourceforge', '', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;

@@ -99,32 +99,24 @@ describe('lib/misc', function() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, error: null, stderr: ''};
       };
-      var logFile = util.format('/tmp/test-stdout-%d', Date.now());
 
-      yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
-      var exists = yield fs.exists('/tmp/test');
+      var result = yield misc.processCommand('ls -al .', __dirname, exec);
 
-      expect(exists).to.equal(false);
+      expect(result).to.equal('ls -al .');
     });
 
     it('should write error.message to the error file', function*() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, err: {message: 'Write this'}, stderr: ''};
       };
-      var logFile = util.format('/tmp/test-err-%d', Date.now());
       var throwsErr = false;
 
       try {
-        yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
+        yield misc.processCommand('ls -al .', '/tmp', exec);
       }
       catch (err) {
         throwsErr = true;
         expect(err.message).to.equal('Write this');
-        var exists = yield fs.exists(logFile);
-        expect(exists).to.equal(true);
-        var contents = yield fs.readFile(logFile, 'utf8');
-        expect(contents).to.equal('Write this');
-        yield fs.unlink(logFile);
       }
       finally {
         expect(throwsErr).to.equal(true);
@@ -135,20 +127,14 @@ describe('lib/misc', function() {
       var exec = function* (cmd, opts) {
         return {stdout: cmd, err: null, stderr: 'Write this too'};
       };
-      var logFile = util.format('/tmp/test-stderr-%d', Date.now());
       var throwsStdErr = false;
 
       try {
-        yield misc.processCommand('ls -al .', '/tmp', logFile, exec);
+        yield misc.processCommand('ls -al .', '/tmp', exec);
       }
       catch (err) {
         expect(err.message).to.equal('Write this too');
         throwsStdErr = true;
-        var exists = yield fs.exists(logFile);
-        expect(exists).to.equal(true);
-        var contents = yield fs.readFile(logFile, 'utf8');
-        expect(contents).to.equal('Write this too');
-        yield fs.unlink(logFile);
       }
       finally {
         expect(throwsStdErr).to.equal(true);

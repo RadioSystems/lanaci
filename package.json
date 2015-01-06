@@ -1,31 +1,30 @@
 {
-  "name": "lana",
-  "version": "0.0.15",
+  "name": "lanaci",
+  "version": "0.1.0",
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "Now run sudo install-lana to finish installation",
     "test": "./node_modules/mocha/bin/mocha --harmony-generators test/*.js"
   },
-  "preferGlobal": true,
   "bin": {
     "install-lana": "./bin/install-lana",
     "lanactl": "./bin/lanactl"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/elzair/lana.git"
+    "url": "https://github.com/radiosystems/lanaci.git"
   },
   "keywords": [
     "ci",
     "continuousintegration",
     "docker"
   ],
-  "author": "Philip Woods",
+  "author": "Radio Systems",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/elzair/lana/issues"
+    "url": "https://github.com/radiosystems/lanaci/issues"
   },
-  "homepage": "https://github.com/elzair/lana",
+  "homepage": "https://github.com/radiosystems/lanaci",
   "dependencies": {
     "co": "^4.0.1",
     "co-fs": "^1.2.0",
