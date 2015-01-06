@@ -17,13 +17,13 @@ describe('lib/misc', function() {
                 "repo/path": {
                     "branch": {
                         "host": "branch.example.com"
-                      , "test_commands": [
+                      , "pre_commands": [
                           "npm test"
                         ]
                     }
                   , "other_branch": {
                         "host": "other.branch.example.com"
-                      , "test_commands": [
+                      , "pre_commands": [
                           "npm test"
                         ]
                     }
@@ -33,13 +33,13 @@ describe('lib/misc', function() {
                 "github/repo": {
                     "another_branch": {
                         "host": "another.branch.example.com"
-                      , "test_commands": [
+                      , "pre_commands": [
                           "lein test"
                         ]
                     }
                   , "yet_another_branch": {
                         "host": "yet.another.branch.example.com"
-                      , "test_commands": [
+                      , "pre_commands": [
                           "lein test"
                         ]
                     }

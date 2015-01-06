@@ -11,7 +11,6 @@ var usage = util.format([
     'Usage: %s <start|stop|add>'
   , 'Add Options:'
   , '\t-h --host\tSpecify remote host'
-  , '\t-l --language\tProgramming language of application'
   , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
   , '\t-r --repository\tName of repository'
   , '\t-u --url\tURL of private code repository'
@@ -23,12 +22,9 @@ var addRepository = function*(argv) {
   console.log(args);
   var repository = args['_'][0]
     , branch     = args['_'][1]
-    , hostStr    = args.H || args.host || '127.0.0.1'
-    , hosts      = hostStr.split(',')
-    , langStr    = args.l || args.language || 'nodejs'
-    , languages  = langStr.split(',')
+    , hosts      = args['_'][2].split(',')
     , provider   = args.p || args.provider || 'github'
-    , tests      = args['_'].slice(2)
+    , preCmds    = args['_'].slice(3)
     , url        = args.u || args.url || ''
     ;
 

@@ -59,7 +59,7 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               host: 'branch.example.com'
-            , test_commands: ['npm test']
+            , pre_commands: ['npm test']
           }
         });
       });
@@ -201,7 +201,7 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               host: 'branch.example.com'
-            , test_commands: ['npm test']
+            , pre_commands: ['npm test']
           }
         });
         expect(combos[1]).to.deep.equal({
@@ -209,7 +209,7 @@ describe('lib/hooks', function() {
           , branch: 'other_branch'
           , conf: {
               host: 'other.branch.example.com'
-            , test_commands: ['npm test']
+            , pre_commands: ['npm test']
           }
         });
       });
@@ -398,7 +398,7 @@ describe('lib/hooks', function() {
           , branch: 'another_branch'
           , conf: {
               host: 'another.branch.example.com'
-            , test_commands: ['lein test']
+            , pre_commands: ['lein test']
           }
         });
       });

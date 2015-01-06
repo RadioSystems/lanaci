@@ -25,13 +25,13 @@ describe('lib/task', function() {
         , 'test'
         , {
               host: 'example.com'
-            , test_commands: ["npm test"] 
+            , pre_commands: ["npm test"] 
           }
       ];
 
       yield task.integrate(combo, processCommand, handleError);
 
-      var homeDir = path.normalize(util.format('%s/..', __dirname));
+      var homeDir = path.normalize(path.join(__dirname, '..'));
       expect(log).to.deep.equal([
           'git fetch origin'
         , 'git checkout test'
@@ -39,10 +39,10 @@ describe('lib/task', function() {
         , 'npm test'
         , 'docker build -t=elzair/protolib .'
         , 'docker save -o '+homeDir+'/local-images/elzair_protolib.tar elzair/protolib'
-        , 'scp '+homeDir+'/local-images/elzair_protolib.tar lana@example.com:'+homeDir+'/remote-images/elzair_protolib.tar'
-        , 'ssh lana@example.com docker load -i '+homeDir+'/remote-images/elzair_protolib.tar'
-        , 'ssh lana@example.com docker kill elzair/protolib'
-        , 'ssh lana@example.com docker run -d --name elzair/protolib elzair/protolib'
+        , 'scp '+homeDir+'/local-images/elzair_protolib.tar lanaci@example.com:'+homeDir+'/remote-images/elzair_protolib.tar'
+        , 'ssh lanaci@example.com docker load -i '+homeDir+'/remote-images/elzair_protolib.tar'
+        , 'ssh lanaci@example.com docker kill elzair/protolib'
+        , 'ssh lanaci@example.com docker run -d --name elzair/protolib elzair/protolib'
       ]);
     });
 
