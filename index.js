@@ -7,16 +7,6 @@ var co        = require('co')
   , util      = require('util')
   ;
 
-var usage = util.format([
-    'Usage: %s <start|stop|add>'
-  , 'Add Options:'
-  , '\t-h --host\tSpecify remote host'
-  , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
-  , '\t-r --repository\tName of repository'
-  , '\t-u --url\tURL of private code repository'
-].join('\n'), process.argv.slice(0, 2).join(' '));
-
-
 var addRepository = function*(argv) {
   var args = minimist(argv);
   console.log(args);
@@ -28,19 +18,7 @@ var addRepository = function*(argv) {
     , url        = args.u || args.url || ''
     ;
 
-  var confPath = path.join(__dirname, 'conf', 'test.json');
-  var testConf = JSON.parse(yield fs.readFile(confPath));
-  for (var i = 0; i < languages.length; i++) {
-    if (testConf.hasOwnProperty(languages[i])) {
-      tests.push(testConf[languages[i]]);
-    }
-    else {
-      console.error(util.format('Invalid language: %s', languages[i]));
-    }
-  }
-
-  //yield task.addRepository(repository, branch, hosts, provider, tests, url);
-  console.log(tests);
+  yield task.addRepository(repository, branch, hosts, provider, url, preCmds);
 };
 
 co(function* () {
@@ -50,12 +28,11 @@ co(function* () {
     , 'Add Options:'
     , '\tName of repository'
     , '\tName of branch'
-    , '\t-H --host\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
-    , '\t-l --language\tProgramming language of application'
+    , '\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
     , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
     , '\t-u --url\tURL of private code repository'
+    , '\tThe rest are assumed to be pre-commands'
   ].join('\n'), argv.slice(0, 2).join(' '));
-  console.log(argv);
 
   var daemon = daemonize.setup({
       main: path.join(__dirname, 'app.js')
@@ -64,7 +41,6 @@ co(function* () {
   });
 
   var cmd = argv[2];
-  console.log(cmd);
 
   switch (cmd) {
     case 'start':

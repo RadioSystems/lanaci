@@ -4,5 +4,4 @@ SCRIPTNAME="$0"
 SCRIPTLOC=$(dirname $(readlink -f "$SCRIPTNAME"))
 INDEXFILE="$SCRIPTLOC/../index.js"
 
-#echo "sudo -u lana node --harmony-generators ${INDEXFILE} $*"
 node --harmony-generators $INDEXFILE "$@"
