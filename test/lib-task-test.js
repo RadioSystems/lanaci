@@ -1,5 +1,6 @@
 var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
+  , misc     = require(__dirname + '/../lib/misc')
   , path     = require('path')
   , task     = require(__dirname + '/../lib/task')
   , util     = require('util')
@@ -80,7 +81,39 @@ describe('lib/task', function() {
     });
     
     it('should add a repository', function*() {
-      yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'github', '', ['npm test'], processCommand);
+      var backup = yield misc.readConf('repos.toml.test');
+
+      yield task.addRepository('elzair/protolib', 'test', 'example.com', 'github', '', ['npm test'], processCommand, 'repos.toml.test');
+
+      var contents = yield misc.readConf('repos.toml.test');
+
+      expect(contents).to.deep.equal({
+          "version": "0.0.1"
+        , "providers": {
+              "github": {
+                "elzair/protolib": {
+                  "test": {
+                      "host": "example.com"
+                    , "pre_commands": [
+                        "npm test"
+                      ]
+                  }
+                }
+              } 
+            , "bitbucket": {
+                "elzair/project": {
+                  "master": {
+                    "host": "example.com"
+                    , "pre_commands": [
+                        "npm test"
+                      ]
+                  }
+                }
+              }
+          }
+      });
+
+      yield misc.writeConf('repos.toml.test', backup); // Restore file
     });
 
     it('should throw an error on an invalid repository', function*() {

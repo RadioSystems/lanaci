@@ -50,6 +50,32 @@ describe('lib/misc', function() {
     });
   });
 
+  describe('writeConf', function() {
+    it('should write the config file', function*() {
+      var test = {
+          "version": "0.0.1"
+        , "providers": {
+            "github": {
+              "elzair/protolib": {
+                "master": {
+                    "host": "protolib.example.com"
+                  , "pre_commands": [
+                      "npm test"
+                    ]
+                }
+              }
+            } 
+          }
+      };
+
+      yield misc.writeConf('repos.toml.test2', test);
+
+      var contents = yield misc.readConf('repos.toml.test2');
+
+      expect(contents).to.deep.equal(test);
+    });
+  });
+
   describe('isIn', function() {
     it('should return true when the element is already present in the array', function() {
       var arr = [

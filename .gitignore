@@ -27,6 +27,8 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 conf/repos.toml
+conf/repos.toml.test
+conf/repos.toml.test2
 *.tern-port
 conf/.ssh/id_rsa
 conf/.ssh/id_rsa.pub
