@@ -16,13 +16,13 @@ describe('lib/misc', function() {
               "bitbucket": {
                 "repo/path": {
                     "branch": {
-                        "host": "branch.example.com"
+                        "hosts": ["branch.example.com"]
                       , "pre_commands": [
                           "npm test"
                         ]
                     }
                   , "other_branch": {
-                        "host": "other.branch.example.com"
+                        "hosts": ["other.branch.example.com"]
                       , "pre_commands": [
                           "lein test"
                         ]
@@ -32,13 +32,13 @@ describe('lib/misc', function() {
             , "github": {
                 "github/repo": {
                     "another_branch": {
-                        "host": "another.branch.example.com"
+                        "hosts": ["another.branch.example.com"]
                       , "pre_commands": [
                           "go test"
                         ]
                     }
                   , "yet_another_branch": {
-                        "host": "yet.another.branch.example.com"
+                        "hosts": ["yet.another.branch.example.com"]
                       , "pre_commands": [
                           "some other command"
                         ]
@@ -58,7 +58,7 @@ describe('lib/misc', function() {
             "github": {
               "elzair/protolib": {
                 "master": {
-                    "host": "protolib.example.com"
+                    "hosts": ["protolib.example.com"]
                   , "pre_commands": [
                       "npm test"
                     ]

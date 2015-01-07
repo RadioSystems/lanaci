@@ -58,7 +58,7 @@ describe('lib/hooks', function() {
           repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              host: 'branch.example.com'
+              hosts: ['branch.example.com']
             , pre_commands: ['npm test']
           }
         });
@@ -200,7 +200,7 @@ describe('lib/hooks', function() {
             repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              host: 'branch.example.com'
+              hosts: ['branch.example.com']
             , pre_commands: ['npm test']
           }
         });
@@ -208,7 +208,7 @@ describe('lib/hooks', function() {
           repo: 'repo/path'
           , branch: 'other_branch'
           , conf: {
-              host: 'other.branch.example.com'
+              hosts: ['other.branch.example.com']
             , pre_commands: ['lein test']
           }
         });
@@ -397,7 +397,7 @@ describe('lib/hooks', function() {
             repo: 'github/repo'
           , branch: 'another_branch'
           , conf: {
-              host: 'another.branch.example.com'
+              hosts: ['another.branch.example.com']
             , pre_commands: ['go test']
           }
         });

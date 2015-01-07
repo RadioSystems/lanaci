@@ -25,7 +25,7 @@ describe('lib/task', function() {
           'elzair/protolib'
         , 'test'
         , {
-              host: 'example.com'
+              hosts: ['example.com']
             , pre_commands: ["npm test"] 
           }
       ];
@@ -62,7 +62,7 @@ describe('lib/task', function() {
       }
       catch (err) {
         throwsErr = true;
-        expect(err).to.equal('Invalid host:  with project elzair/protolib and branch test');
+        expect(err).to.equal('You must specify a list of hosts for elzair/protolib test');
       }
       finally {
         expect(throwsErr).to.equal(true);
@@ -83,7 +83,7 @@ describe('lib/task', function() {
     it('should add a repository', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addRepository('elzair/protolib', 'test', 'example.com', 'github', '', ['npm test'], processCommand, 'repos.toml.test');
+      yield task.addRepository('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
 
@@ -93,7 +93,7 @@ describe('lib/task', function() {
               "github": {
                 "elzair/protolib": {
                   "test": {
-                      "host": "example.com"
+                      "hosts": ["example.com"]
                     , "pre_commands": [
                         "npm test"
                       ]
@@ -103,7 +103,7 @@ describe('lib/task', function() {
             , "bitbucket": {
                 "elzair/project": {
                   "master": {
-                    "host": "example.com"
+                    "hosts": ["example.com"]
                     , "pre_commands": [
                         "npm test"
                       ]
@@ -120,7 +120,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('', ['test'], 'example.com', 'github', '', ['npm test'], processCommand);
+        yield task.addRepository('', ['test'], [], 'github', '', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;
