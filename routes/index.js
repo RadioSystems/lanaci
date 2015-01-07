@@ -7,24 +7,26 @@ var fs         = require('fs')
   , util       = require('util')
 ;
 
-var integrate = exports.integrate = function(req, res, next) {
-  var combos = hooks.handleHooks(req);
+var integrate = exports.integrate = function*(next) {
+  var combos = hooks.handleHooks(this.request);
 
   if (combos === 'Hook not supported') {
-    return res.send(400, combos);
+    return this.response.send(400, combos);
   }
 
-  res.send(200);
-  res.end();
+  yield next;
+
+  this.response.send(200);
+  this.response.end();
 
   for (var i = 0; i < combos.length; i++) {
     task(combos[i]);
   }
 };
 
-var display = exports.display = function(req, res, next) {
+var display = exports.display = function*(next) {
   var conf = misc.readConf('repos.json');
-  var repodir = '/home/lana/repos/';
+  var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
   var dirs = [];
   var data = {
     projects: []
@@ -34,12 +36,12 @@ var display = exports.display = function(req, res, next) {
     if (conf.hasOwnProperty(repo)) {
       for (var branch in conf[repo]) {
         if (conf[repo].hasOwnProperty(branch)) {
-          var dir = fs.readdirSynx(path.join(repodir, repo, branch));
+          var dir = yield fs.readdirx(path.join(repodir, repo, branch));
 
           var file = '';
           if (dir.length > 0) {
             var m = misc.max(dir);
-            file = fs.readFileSync(path.join(dir, m));
+            file = yield fs.readFile(path.join(dir, m));
           }
           else {
             file = '';
@@ -54,9 +56,10 @@ var display = exports.display = function(req, res, next) {
     }
   }
 
-  var template = fs.readFileSync(__dirname + '/../frontend/template.html');
+  var templatePath = path.join(__dirname, '..', 'frontend', 'template.html');
+  var template = yield fs.readFile(templatePath);
   var html = handlebars.compile(template)(data);
 
-  res.send(200, html);
-  res.end();
+  this.response.send(200, html);
+  yield next;
 };
