@@ -9,7 +9,7 @@ var co        = require('co')
 
 var addRepository = function*(argv) {
   var args = minimist(argv);
-  console.log(args);
+
   var repository = args['_'][0]
     , branch     = args['_'][1]
     , hosts      = args['_'][2].split(',')
@@ -21,10 +21,19 @@ var addRepository = function*(argv) {
   yield task.addRepository(repository, branch, hosts, provider, url, preCmds);
 };
 
+var addRemote = function*(argv) {
+  var args = minimist(argv);
+  var user = args['_'][0];
+  var host = args['_'][1];
+  var port = args.p || args.port || "22";
+
+  yield task.addRemote(user, host, port);
+};
+
 co(function* () {
   var argv = process.argv;
   var usage = util.format([
-      'Usage: %s <start|stop|add> [AddOptions]'
+      'Usage: %s <start|stop|add-project|add-remote> [AddOptions|AddRemoteOptions]'
     , 'Add Options:'
     , '\tName of repository'
     , '\tName of branch'
@@ -32,6 +41,11 @@ co(function* () {
     , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
     , '\t-u --url\tURL of private code repository'
     , '\tThe rest are assumed to be pre-commands'
+    , ''
+    , 'Add-Remote Options'
+    , '\tRemote User'
+    , '\tRemote Host'
+    , '\t-p --port\tSSH port'
   ].join('\n'), argv.slice(0, 2).join(' '));
 
   var daemon = daemonize.setup({
@@ -49,8 +63,11 @@ co(function* () {
     case 'stop':
       daemon.stop();
       break;
-    case 'add':
+    case 'add-project':
       yield addRepository(argv.slice(3));
+      break;
+    case 'add-remote':
+      yield addRemote(argv.slice(3));
       break;
     case '-h':
       console.log(usage);

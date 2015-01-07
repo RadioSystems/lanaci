@@ -86,6 +86,13 @@ describe('lib/task', function() {
       yield task.addRepository('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
+      var projectPath = path.join(__dirname, '..');
+
+      expect(log).to.deep.equal([
+          'git clone git@github.com:elzair/protolib.git '+projectPath+'/repos/elzair/protolib'
+        , 'mkdir -p '+projectPath+'/logs/elzair/protolib/test'
+        , 'git checkout --track origin/test'
+      ]);
 
       expect(contents).to.deep.equal({
           "version": "0.0.1"
@@ -144,6 +151,34 @@ describe('lib/task', function() {
       finally {
         expect(throwsErr).to.equal(true);
       }
+    });
+  });
+
+  describe('addRemote', function() {
+    var log, processCommand;
+
+    beforeEach(function*() {
+      log = [];
+      processCommand = function*(cmd, cwd) {
+        log.push(cmd);
+      };
+    });
+
+    it('should add a remote host', function*() {
+      var sshPath = path.join(__dirname, '..', 'conf', '.ssh', 'id_rsa.pub');
+      yield task.addRemote('elzair', '127.0.0.1', '22', processCommand);
+
+      expect(log).to.deep.equal([
+          'ssh -p 22 elzair@127.0.0.1 "sudo useradd -m -s /bin/false -d /home/lanaci lanaci"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo gpasswd -a lanaci docker"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo service docker restart"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci mkdir -p /home/lanaci/.ssh"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci chmod 700 /home/lanaci/.ssh"'
+        , 'scp ' + sshPath + ' -P 22 elzair@127.0.0.1:/tmp/id_rsa.pub'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo chown lanaci /tmp/id_rsa.pub"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci cat /tmp/id_rsa.pub >> /home/lanaci/.ssh/authorized_keys"'
+        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci rm /tmp/id_rsa.pub"'
+      ]);
     });
   });
 });
