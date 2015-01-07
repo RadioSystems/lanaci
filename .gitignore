@@ -31,3 +31,9 @@ conf/repos.toml.test2
 *.tern-port
 conf/.ssh/id_rsa
 conf/.ssh/id_rsa.pub
+local-images/*
+!local-images/.stub
+logs/*
+!logs/.stub
+repos/*
+!repos/.stub

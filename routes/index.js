@@ -25,32 +25,37 @@ var integrate = exports.integrate = function*(next) {
 };
 
 var display = exports.display = function*(next) {
-  var conf = misc.readConf('repos.json');
+  console.log('Got here!');
+  var conf = yield misc.readConf('repos.toml');
   var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
   var dirs = [];
   var data = {
     projects: []
   };
 
-  for (var repo in conf) {
-    if (conf.hasOwnProperty(repo)) {
-      for (var branch in conf[repo]) {
-        if (conf[repo].hasOwnProperty(branch)) {
-          var dir = yield fs.readdirx(path.join(repodir, repo, branch));
+  for (var provider in conf.providers) {
+    if (conf.providers.hasOwnProperty(provider)) {
+      for (var repo in conf.providers[provider]) {
+        if (conf.providers[provider].hasOwnProperty(repo)) {
+          for (var branch in conf.providers[provider][repo]) {
+            if (conf.providers[provider][repo].hasOwnProperty(branch)) {
+              var dir = yield fs.readdir(path.join(repodir, repo, branch));
 
-          var file = '';
-          if (dir.length > 0) {
-            var m = misc.max(dir);
-            file = yield fs.readFile(path.join(dir, m));
-          }
-          else {
-            file = '';
-          }
+              var file = '';
+              if (dir.length > 0) {
+                var m = misc.max(dir);
+                file = yield fs.readFile(path.join(dir, m));
+              }
+              else {
+                file = '';
+              }
 
-          data.projects.push({
-              complete: file.length > 0 ? true: false
-            , output: file
-          });
+              data.projects.push({
+                  complete: file.length > 0 ? true: false
+                , output: file
+              });
+            }
+          }
         }
       }
     }

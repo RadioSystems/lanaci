@@ -4,6 +4,8 @@
   "description": "A simple continuous integration solution for Node.js",
   "scripts": {
     "postinstall": "Now run sudo install-lana to finish installation",
+    "start": "node --harmony-generators index.js start",
+    "stop": "node --harmony-generators index.js stop",
     "test": "./node_modules/mocha/bin/mocha --harmony-generators test/*.js"
   },
   "bin": {

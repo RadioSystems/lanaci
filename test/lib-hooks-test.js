@@ -55,7 +55,8 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
         expect(combos[0]).to.deep.equal({
-          repo: 'repo/path'
+            provider: 'bitbucket'
+          , repo: 'repo/path'
           , branch: 'branch'
           , conf: {
               hosts: ['branch.example.com']
@@ -197,7 +198,8 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
         expect(combos[0]).to.deep.equal({
-            repo: 'repo/path'
+            provider: 'bitbucket'
+          , repo: 'repo/path'
           , branch: 'branch'
           , conf: {
               hosts: ['branch.example.com']
@@ -205,7 +207,8 @@ describe('lib/hooks', function() {
           }
         });
         expect(combos[1]).to.deep.equal({
-          repo: 'repo/path'
+            provider: 'bitbucket'
+          , repo: 'repo/path'
           , branch: 'other_branch'
           , conf: {
               hosts: ['other.branch.example.com']
@@ -394,7 +397,8 @@ describe('lib/hooks', function() {
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
         expect(combos[0]).to.deep.equal({
-            repo: 'github/repo'
+            provider: 'github'
+          , repo: 'github/repo'
           , branch: 'another_branch'
           , conf: {
               hosts: ['another.branch.example.com']

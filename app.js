@@ -1,14 +1,16 @@
 var koa       = require('koa')
   , koaBody   = require('koa-body')
-  , koaRouter = require('koa-router')
+  , router    = require('koa-router')
   , routes    = require(__dirname + '/routes')
   ;
 
-var server = koa();
+var app = koa();
 
-server.get('/', routes.display);
-server.post('/', koaBody, routes.integrate);
+app.use(router(app));
 
-server.listen(6823, function () {
-  console.log('%s listening at %s', server.name, server.url);
+app.get('/', routes.display);
+app.post('/', koaBody, routes.integrate);
+
+app.listen(6823, function () {
+  console.log('%s listening at %s', app.name, app.url);
 });

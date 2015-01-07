@@ -22,7 +22,8 @@ describe('lib/task', function() {
     
     it('should process a valid combination', function*() {
       var combo = [
-          'elzair/protolib'
+          'github'
+        , 'elzair/protolib'
         , 'test'
         , {
               hosts: ['example.com']
@@ -49,7 +50,8 @@ describe('lib/task', function() {
 
     it('should throw an error on an invalid host', function*() {
       var combo = [
-          'elzair/protolib'
+          'github'
+        , 'elzair/protolib'
         , 'test'
         , {
               testCommands: ['npm test']
@@ -89,8 +91,8 @@ describe('lib/task', function() {
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
-          'git clone git@github.com:elzair/protolib.git '+projectPath+'/repos/elzair/protolib'
-        , 'mkdir -p '+projectPath+'/logs/elzair/protolib/test'
+          'git clone git@github.com:elzair/protolib.git '+projectPath+'/repos/github/elzair/protolib'
+        , 'mkdir -p '+projectPath+'/logs/github/elzair/protolib/test'
         , 'git checkout --track origin/test'
       ]);
 
