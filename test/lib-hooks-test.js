@@ -50,7 +50,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -192,7 +192,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
@@ -209,7 +209,7 @@ describe('lib/hooks', function() {
           , branch: 'other_branch'
           , conf: {
               host: 'other.branch.example.com'
-            , pre_commands: ['npm test']
+            , pre_commands: ['lein test']
           }
         });
       });
@@ -389,7 +389,7 @@ describe('lib/hooks', function() {
           }
         });
 
-        var combos = yield hooks.handleHooks(validRequest, "repos.json.template");
+        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -398,7 +398,7 @@ describe('lib/hooks', function() {
           , branch: 'another_branch'
           , conf: {
               host: 'another.branch.example.com'
-            , pre_commands: ['lein test']
+            , pre_commands: ['go test']
           }
         });
       });
@@ -416,7 +416,7 @@ describe('lib/hooks', function() {
         var throwsErr = false;
 
         try {
-          yield hooks.handleHooks(invalidRequest, "repos.json.template");
+          yield hooks.handleHooks(invalidRequest, "repos.toml.template");
         }
         catch(err) {
           throwsErr = true;

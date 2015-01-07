@@ -8,7 +8,7 @@ var co_mocha = require('co-mocha')
 describe('lib/misc', function() {
   describe('readConf', function() {
     it('should read the file and return an object with its contents', function*() {
-      var repos = yield misc.readConf('repos.json.template');
+      var repos = yield misc.readConf('repos.toml.template');
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
           "version": "0.0.1"
@@ -24,7 +24,7 @@ describe('lib/misc', function() {
                   , "other_branch": {
                         "host": "other.branch.example.com"
                       , "pre_commands": [
-                          "npm test"
+                          "lein test"
                         ]
                     }
                 }
@@ -34,13 +34,13 @@ describe('lib/misc', function() {
                     "another_branch": {
                         "host": "another.branch.example.com"
                       , "pre_commands": [
-                          "lein test"
+                          "go test"
                         ]
                     }
                   , "yet_another_branch": {
                         "host": "yet.another.branch.example.com"
                       , "pre_commands": [
-                          "lein test"
+                          "some other command"
                         ]
                     }
                 }

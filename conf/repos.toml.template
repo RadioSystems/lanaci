@@ -1,0 +1,23 @@
+version = "0.0.1"
+
+[providers.bitbucket]
+
+  [providers.bitbucket.repo/path]
+
+    [providers.bitbucket.repo/path.branch]
+      host = "branch.example.com"
+      pre_commands = [ "npm test" ]
+
+    [providers.bitbucket.repo/path.other_branch]
+      host = "other.branch.example.com"
+      pre_commands = [ "lein test" ]
+
+  [providers.github]
+
+    [providers.github.github/repo.another_branch]
+      host = "another.branch.example.com"
+      pre_commands = [ "go test" ]
+
+    [providers.github.github/repo.yet_another_branch]
+      host = "yet.another.branch.example.com"
+      pre_commands = [ "some other command" ]

@@ -35,7 +35,8 @@
     "koa": "^0.14.0",
     "koa-body": "^0.4.0",
     "koa-router": "^3.8.0",
-    "minimist": "^1.1.0"
+    "minimist": "^1.1.0",
+    "toml": "^2.0.6"
   },
   "devDependencies": {
     "chai": "^1.10.0",
