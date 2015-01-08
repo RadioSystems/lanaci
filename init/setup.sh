@@ -12,7 +12,7 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 
 # Make user lanaci owner of lanaci directory
 LANACIPATH="$SCRIPTPATH/../"
-chown -R lanaci "$LANACIPATH"
+chown -R lanaci "$LANACIPATH/lanaci"
 
 # Add SSH Keys
 SSHPATH="$SCRIPTPATH/../conf/.ssh"
@@ -22,3 +22,22 @@ echo "Add the previous line to the list of SSH keys for your git host account."
 
 # Set correct permissions on SSH 
 sudo -u lanaci chmod 600 "$SSHPATH/id_rsa" "$SSHPATH/id_rsa.pub"
+
+# Setup either Upstart or SystemD
+command -v lsb_release >/dev/null 2>&1
+if [ "$?" = "0" ] && [ $(lsb_release -is) = "Ubuntu" ] && [ $(lsb_release -cs) = "trusty" ]
+then
+    cp "$SCRIPTPATH/init/lanaci.conf" /etc/init/lanaci.conf
+elif [ -d "/etc/systemd/system" ]
+then
+    echo "$SCRIPTPATH/init/lanaci.service" /etc/systemd/system/lanaci.service 
+elif [ -d "/run/systemd/system" ]
+then
+    echo "$SCRIPTPATH/init/lanaci.service" /run/systemd/system/lanaci.service 
+elif [ -d "/usr/lib/systemd/system" ]
+then
+    echo "$SCRIPTPATH/init/lanaci.service" /usr/lib/systemd/system/lanaci.service 
+else 
+    echo "If you want to run lanaci as a daemon, you must configure it manually!" > /dev/stderr
+fi
+

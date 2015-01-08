@@ -1,0 +1,14 @@
+[Unit]
+Description=LanaCI
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/env lanactl start
+Restart=always
+Environment=NODE_ENV=production
+User=lanaci
+
+[Install]
+WantedBy=multi-user.target
+
