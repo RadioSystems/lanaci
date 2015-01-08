@@ -37,3 +37,4 @@ logs/*
 !logs/.stub
 repos/*
 !repos/.stub
+*.pid

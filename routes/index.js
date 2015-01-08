@@ -39,21 +39,30 @@ var display = exports.display = function*(next) {
         if (conf.providers[provider].hasOwnProperty(repo)) {
           for (var branch in conf.providers[provider][repo]) {
             if (conf.providers[provider][repo].hasOwnProperty(branch)) {
-              var dir = yield fs.readdir(path.join(repodir, repo, branch));
-
+              var err = false;
               var file = '';
-              if (dir.length > 0) {
-                var m = misc.max(dir);
-                file = yield fs.readFile(path.join(dir, m));
-              }
-              else {
-                file = '';
-              }
 
-              data.projects.push({
-                  complete: file.length > 0 ? true: false
-                , output: file
-              });
+              try {
+                var dir = yield fs.readdir(path.join(repodir, repo, branch));
+
+                if (dir.length > 0) {
+                  var m = misc.max(dir);
+                  file = yield fs.readFile(path.join(dir, m));
+                }
+                else {
+                  file = '';
+                }
+              }
+              catch (e) {
+                err = e;
+              }
+              finally {
+                data.projects.push({
+                    complete: file.length > 0 ? true: false
+                  , error: err
+                  , output: file
+                });
+              }
             }
           }
         }

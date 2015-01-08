@@ -4,13 +4,13 @@ var koa       = require('koa')
   , routes    = require(__dirname + '/routes')
   ;
 
-var app = koa();
+var createApp = exports.createApp = function() {
+  var app = koa();
+  
+  app.use(router(app));
+  
+  app.get('/', routes.display);
+  app.post('/', koaBody, routes.integrate);
 
-app.use(router(app));
-
-app.get('/', routes.display);
-app.post('/', koaBody, routes.integrate);
-
-app.listen(6823, function () {
-  console.log('%s listening at %s', app.name, app.url);
-});
+  return app;
+};
