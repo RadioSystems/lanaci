@@ -9,10 +9,11 @@ var koa       = require('koa')
 var createApp = exports.createApp = function() {
   var app = koa();
   
-  app.use(koaStatic(path.join(__dirname, 'frontend')));
+  app.use(koaStatic(path.join(__dirname, 'frontend', 'public')));
   app.use(router(app));
   
-  app.get('/', routes.display);
+  //app.get('/', routes.index);
+  app.get('/projects', routes.projects);
   app.post('/', koaBody, routes.integrate);
 
   return app;

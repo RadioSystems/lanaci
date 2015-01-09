@@ -23,13 +23,11 @@ var integrate = exports.integrate = function*(next) {
   }
 };
 
-var display = exports.display = function*(next) {
+var projects = exports.projects = function*(next) {
   var conf = yield misc.readConf('repos.toml');
   var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
   var dirs = [];
-  var data = {
-    projects: []
-  };
+  var projects = [];
 
   for (var provider in conf.providers) {
     if (conf.providers.hasOwnProperty(provider)) {
@@ -56,10 +54,11 @@ var display = exports.display = function*(next) {
                 err = e;
               }
               finally {
-                data.projects.push({
-                    complete: !(err || file.length > 0)
-                  , name: util.format('%s:%s:%s', provider, repo, branch)
+                projects.push({
+                    branch: branch
                   , output: file || err
+                  , provider: provider
+                  , repo: repo
                 });
               }
             }
@@ -68,11 +67,16 @@ var display = exports.display = function*(next) {
       }
     }
   }
+  console.log(projects);
+  this.body = projects;
 
-  var templatePath = path.join(__dirname, '..', 'frontend', 'template.html');
-  var template = yield fs.readFile(templatePath, 'utf8');
-  var html = ejs.render(template, data);
-
-  this.body = html;
   yield next;
 };
+
+//var index = exports.index = function*(next) {
+//  var filePath = path.join(__dirname, '..', 'frontend', 'public', 'template.html');
+//  
+//  this.body = yield fs.readFile(filePath);
+//
+//  yield next;
+//};
