@@ -1,5 +1,4 @@
-var fs         = require('fs')
-  , handlebars = require('handlebars')
+var fs         = require('co-fs')
   , hooks      = require(__dirname + '/../lib/hooks')
   , misc       = require(__dirname + '/../lib/misc')
   , path       = require('path')
@@ -25,7 +24,6 @@ var integrate = exports.integrate = function*(next) {
 };
 
 var display = exports.display = function*(next) {
-  console.log('Got here!');
   var conf = yield misc.readConf('repos.toml');
   var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
   var dirs = [];
@@ -43,7 +41,8 @@ var display = exports.display = function*(next) {
               var file = '';
 
               try {
-                var dir = yield fs.readdir(path.join(repodir, repo, branch));
+                var dirPath = path.join(repodir, provider, repo, branch);
+                var dir = yield fs.readdir(dirPath);
 
                 if (dir.length > 0) {
                   var m = misc.max(dir);
@@ -58,9 +57,9 @@ var display = exports.display = function*(next) {
               }
               finally {
                 data.projects.push({
-                    complete: file.length > 0 ? true: false
-                  , error: err
-                  , output: file
+                    complete: !(err || file.length > 0)
+                  , name: util.format('%s:%s:%s', provider, repo, branch)
+                  , output: file || err
                 });
               }
             }
@@ -71,9 +70,9 @@ var display = exports.display = function*(next) {
   }
 
   var templatePath = path.join(__dirname, '..', 'frontend', 'template.html');
-  var template = yield fs.readFile(templatePath);
-  var html = handlebars.compile(template)(data);
+  var template = yield fs.readFile(templatePath, 'utf8');
+  var html = ejs.render(template, data);
 
-  this.response.send(200, html);
+  this.body = html;
   yield next;
 };
