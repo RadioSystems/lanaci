@@ -6,20 +6,28 @@
     color: red;
 }
 
-tr.project:nth-child(2n) {
-    background-color: #cef;
+tr.project {
+    border-spacing: 0px;
 }
 
 tr.project:nth-child(2n+1) {
-    background-color: #def;
+    background-color: #f9f9f9;
 }
 
 td {
     padding: 10px 10px 10px 10px;
+    border-top-color: #ddd;
+    border-top-width: 1px;
+    border-top-style: solid;
 }
 
 table {
     text-align: middle;
+    border-collapse: collapse;
+    background-color: transparent;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid #ddd;
 }
 
 body {
