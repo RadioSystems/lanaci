@@ -16,15 +16,17 @@
           <th>Output</th>
         </tr>
       </thead>
-        <tr ng-repeat="project in projects">
+        <tr class="project" ng-repeat="project in projects">
           <td class="status">
-              <p  class="success">✓</p>
-              <p  class="failure">✕</p>
+              <p ng-show="project.output===null" class="success">✓</p>
+              <p ng-show="project.output!==null" class="failure">✕</p>
           </td>
           <td class="name">
+            <p>{{project.provider+':'+project.repo+':'+project.branch}}</p>
           </td>
           <td class="output">
-              <p >Build & Deploy Succeeded</p>
+              <p ng-show="project.output===null">Build & Deploy Succeeded</p>
+              <p ng-show="project.output!==null">{{project.output}}</p>
           </td>
         </tr>
     </table>

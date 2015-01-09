@@ -67,16 +67,7 @@ var projects = exports.projects = function*(next) {
       }
     }
   }
-  console.log(projects);
   this.body = projects;
 
   yield next;
 };
-
-//var index = exports.index = function*(next) {
-//  var filePath = path.join(__dirname, '..', 'frontend', 'public', 'template.html');
-//  
-//  this.body = yield fs.readFile(filePath);
-//
-//  yield next;
-//};

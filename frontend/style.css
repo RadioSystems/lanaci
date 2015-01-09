@@ -1,0 +1,33 @@
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
+
+tr.project:nth-child(2n) {
+    background-color: #cef;
+}
+
+tr.project:nth-child(2n+1) {
+    background-color: #def;
+}
+
+td {
+    padding: 10px 10px 10px 10px;
+}
+
+table {
+    text-align: middle;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+    text-align: center;
+}
