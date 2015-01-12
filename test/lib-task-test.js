@@ -168,18 +168,18 @@ describe('lib/task', function() {
 
     it('should add a remote host', function*() {
       var sshPath = path.join(__dirname, '..', 'conf', '.ssh', 'id_rsa.pub');
-      yield task.addRemote('elzair', '127.0.0.1', '22', processCommand);
+      yield task.addRemote('elzair', '127.0.0.1', processCommand);
 
       expect(log).to.deep.equal([
-          'ssh -p 22 elzair@127.0.0.1 "sudo useradd -m -s /bin/false -d /home/lanaci lanaci"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo gpasswd -a lanaci docker"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo service docker restart"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci mkdir -p /home/lanaci/.ssh"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci chmod 700 /home/lanaci/.ssh"'
-        , 'scp ' + sshPath + ' -P 22 elzair@127.0.0.1:/tmp/id_rsa.pub'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo chown lanaci /tmp/id_rsa.pub"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci cat /tmp/id_rsa.pub >> /home/lanaci/.ssh/authorized_keys"'
-        , 'ssh -p 22 elzair@127.0.0.1 "sudo -u lanaci rm /tmp/id_rsa.pub"'
+          'ssh elzair@127.0.0.1 "sudo useradd -m -s /bin/false -d /home/lanaci lanaci"'
+        , 'ssh elzair@127.0.0.1 "sudo gpasswd -a lanaci docker"'
+        , 'ssh elzair@127.0.0.1 "sudo service docker restart"'
+        , 'ssh elzair@127.0.0.1 "sudo -u lanaci mkdir -p /home/lanaci/.ssh"'
+        , 'ssh elzair@127.0.0.1 "sudo -u lanaci chmod 700 /home/lanaci/.ssh"'
+        , 'scp ' + sshPath + ' elzair@127.0.0.1:/tmp/id_rsa.pub'
+        , 'ssh elzair@127.0.0.1 "sudo chown lanaci /tmp/id_rsa.pub"'
+        , 'ssh elzair@127.0.0.1 "sudo -u lanaci cat /tmp/id_rsa.pub >> /home/lanaci/.ssh/authorized_keys"'
+        , 'ssh elzair@127.0.0.1 "sudo -u lanaci rm /tmp/id_rsa.pub"'
       ]);
     });
   });

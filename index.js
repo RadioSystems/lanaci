@@ -25,9 +25,8 @@ var addRemote = function*(argv) {
   var args = minimist(argv);
   var user = args['_'][0];
   var host = args['_'][1];
-  var port = args.p || args.port || "22";
 
-  yield task.addRemote(user, host, port);
+  yield task.addRemote(user, host);
 };
 
 var startApp = false, stopApp = false;
