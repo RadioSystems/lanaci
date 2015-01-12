@@ -46,7 +46,6 @@ co(function*() {
     , 'Add-Remote Options'
     , '\tRemote User'
     , '\tRemote Host'
-    , '\t-p --port\tSSH port'
   ].join('\n'), argv.slice(0, 2).join(' '));
 
   var cmd = argv[2];
