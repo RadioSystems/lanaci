@@ -7,28 +7,33 @@
   </head>
   <body ng-controller="ProjectsCtrl">
     <h1>Projects</h1>
-    <table id="projects">
-      <thead>
-        <tr>
-          <th>Status</th>
-          <th>Name</th>
-          <th>Output</th>
-        </tr>
-      </thead>
-        <tr class="project" ng-repeat="project in projects">
-          <td class="status">
-              <p ng-show="project.output===null" class="success">✓</p>
-              <p ng-show="project.output!==null" class="failure">✕</p>
-          </td>
-          <td class="name">
-            <p>{{project.provider+':'+project.repo+':'+project.branch}}</p>
-          </td>
-          <td class="output">
-              <p ng-show="project.output===null">Build & Deploy Succeeded</p>
-              <p ng-show="project.output!==null">{{project.output}}</p>
-          </td>
-        </tr>
-    </table>
+    <div id="projectsStub" ng-show="retrievedProjects===true">
+      <p id="projectsError" class="failure" ng-show="projects.length===0">
+        There are not projects to display at this time.
+      </p>
+      <table id="projects" ng-show="projects.length>0">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+          <tr class="project" ng-repeat="project in projects">
+            <td class="status">
+                <p ng-show="project.output===null" class="success">✓</p>
+                <p ng-show="project.output!==null" class="failure">✕</p>
+            </td>
+            <td class="name">
+              <p>{{project.provider+':'+project.repo+':'+project.branch}}</p>
+            </td>
+            <td class="output">
+                <p ng-show="project.output===null">Build & Deploy Succeeded</p>
+                <p ng-show="project.output!==null">{{project.output}}</p>
+            </td>
+          </tr>
+      </table>
+    </div>
     <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>

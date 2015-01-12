@@ -10,13 +10,12 @@ var integrate = exports.integrate = function*(next) {
   var combos = hooks.handleHooks(this.request);
 
   if (combos === 'Hook not supported') {
-    return this.response.send(400, combos);
+    this.throw(combos, 400);
   }
 
-  yield next;
+  this.status = 200;
 
-  this.response.send(200);
-  this.response.end();
+  yield next;
 
   for (var i = 0; i < combos.length; i++) {
     task(combos[i]);
@@ -24,42 +23,45 @@ var integrate = exports.integrate = function*(next) {
 };
 
 var projects = exports.projects = function*(next) {
-  var conf = yield misc.readConf('repos.toml');
-  var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
   var dirs = [];
   var projects = [];
+  var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
 
-  for (var provider in conf.providers) {
-    if (conf.providers.hasOwnProperty(provider)) {
-      for (var repo in conf.providers[provider]) {
-        if (conf.providers[provider].hasOwnProperty(repo)) {
-          for (var branch in conf.providers[provider][repo]) {
-            if (conf.providers[provider][repo].hasOwnProperty(branch)) {
-              var err = false;
-              var file = '';
+  try {
+    var conf = yield misc.readConf('repos.toml');
 
-              try {
-                var dirPath = path.join(repodir, provider, repo, branch);
-                var dir = yield fs.readdir(dirPath);
+    for (var provider in conf.providers) {
+      if (conf.providers.hasOwnProperty(provider)) {
+        for (var repo in conf.providers[provider]) {
+          if (conf.providers[provider].hasOwnProperty(repo)) {
+            for (var branch in conf.providers[provider][repo]) {
+              if (conf.providers[provider][repo].hasOwnProperty(branch)) {
+                var err = false;
+                var file = '';
 
-                if (dir.length > 0) {
-                  var m = misc.max(dir);
-                  file = yield fs.readFile(path.join(dir, m));
+                try {
+                  var dirPath = path.join(repodir, provider, repo, branch);
+                  var dir = yield fs.readdir(dirPath);
+
+                  if (dir.length > 0) {
+                    var m = misc.max(dir);
+                    file = yield fs.readFile(path.join(dir, m));
+                  }
+                  else {
+                    file = '';
+                  }
                 }
-                else {
-                  file = '';
+                catch (e) {
+                  err = e;
                 }
-              }
-              catch (e) {
-                err = e;
-              }
-              finally {
-                projects.push({
-                    branch: branch
-                  , output: file || err
-                  , provider: provider
-                  , repo: repo
-                });
+                finally {
+                  projects.push({
+                      branch: branch
+                    , output: file || err
+                    , provider: provider
+                    , repo: repo
+                  });
+                }
               }
             }
           }
@@ -67,7 +69,11 @@ var projects = exports.projects = function*(next) {
       }
     }
   }
-  this.body = projects;
-
-  yield next;
+  catch (err2) {
+    console.error(err2);
+  }
+  finally {
+    this.body = projects;
+    yield next;
+  }
 };

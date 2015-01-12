@@ -12,8 +12,10 @@ angular.module('projectsApp', [])
 
 .controller('ProjectsCtrl', function ($scope, Projects) {
   $scope.projects = [];
+  $scope.retrievedProjects = false;
 
   Projects.getProjects().then(function (projects) {
     $scope.projects = projects;
+    $scope.retrievedProjects = true;
   });
 });
