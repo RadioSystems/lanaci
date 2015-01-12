@@ -17,12 +17,14 @@ describe('lib/misc', function() {
                 "repo/path": {
                     "branch": {
                         "hosts": ["branch.example.com"]
+                      , "options": "-v /host:/container"
                       , "pre_commands": [
                           "npm test"
                         ]
                     }
                   , "other_branch": {
                         "hosts": ["other.branch.example.com"]
+                      , "options": "-p 4000:4000"
                       , "pre_commands": [
                           "lein test"
                         ]
@@ -33,12 +35,14 @@ describe('lib/misc', function() {
                 "github/repo": {
                     "another_branch": {
                         "hosts": ["another.branch.example.com"]
+                      , "options": "-v /host2:/container -p 4001:4001"
                       , "pre_commands": [
                           "go test"
                         ]
                     }
                   , "yet_another_branch": {
                         "hosts": ["yet.another.branch.example.com"]
+                      , "options": ""
                       , "pre_commands": [
                           "some other command"
                         ]

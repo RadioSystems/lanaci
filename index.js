@@ -13,12 +13,13 @@ var addRepository = function*(argv) {
   var repository = args['_'][0]
     , branch     = args['_'][1]
     , hosts      = args['_'][2].split(',')
-    , provider   = args.p || args.provider || 'github'
+    , options = args.o || args.options || ''
     , preCmds    = args['_'].slice(3)
+    , provider   = args.p || args.provider || 'github'
     , url        = args.u || args.url || ''
     ;
 
-  yield task.addRepository(repository, branch, hosts, provider, url, preCmds);
+  yield task.addRepository(repository, branch, hosts, provider, url, preCmds, options);
 };
 
 var addRemote = function*(argv) {
@@ -39,6 +40,7 @@ co(function*() {
     , '\tName of repository'
     , '\tName of branch'
     , '\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
+    , '\t-o --options\tContainer runtime options'
     , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
     , '\t-u --url\tURL of private code repository'
     , '\tThe rest are assumed to be pre-commands'

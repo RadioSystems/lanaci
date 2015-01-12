@@ -60,6 +60,7 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               hosts: ['branch.example.com']
+            , options: '-v /host:/container'
             , pre_commands: ['npm test']
           }
         });
@@ -203,6 +204,7 @@ describe('lib/hooks', function() {
           , branch: 'branch'
           , conf: {
               hosts: ['branch.example.com']
+            , options: '-v /host:/container'
             , pre_commands: ['npm test']
           }
         });
@@ -212,6 +214,7 @@ describe('lib/hooks', function() {
           , branch: 'other_branch'
           , conf: {
               hosts: ['other.branch.example.com']
+            , options: '-p 4000:4000'
             , pre_commands: ['lein test']
           }
         });
@@ -402,6 +405,7 @@ describe('lib/hooks', function() {
           , branch: 'another_branch'
           , conf: {
               hosts: ['another.branch.example.com']
+            , options: '-v /host2:/container -p 4001:4001'
             , pre_commands: ['go test']
           }
         });

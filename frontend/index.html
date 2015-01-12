@@ -28,8 +28,8 @@
               <p>{{project.provider+':'+project.repo+':'+project.branch}}</p>
             </td>
             <td class="output">
-                <p ng-show="project.output===null">Build & Deploy Succeeded</p>
-                <p ng-show="project.output!==null">{{project.output}}</p>
+                <p ng-show="project.output===null" class="success">Build & Deploy Succeeded</p>
+                <p ng-show="project.output!==null" class="failure">{{project.output}}</p>
             </td>
           </tr>
       </table>

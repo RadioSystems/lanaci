@@ -25,7 +25,7 @@ var integrate = exports.integrate = function*(next) {
 var projects = exports.projects = function*(next) {
   var dirs = [];
   var projects = [];
-  var repodir = path.normalize(path.join(__dirname, '..', 'repos'));
+  var logdir = path.normalize(path.join(__dirname, '..', 'logs'));
 
   try {
     var conf = yield misc.readConf('repos.toml');
@@ -40,7 +40,7 @@ var projects = exports.projects = function*(next) {
                 var file = '';
 
                 try {
-                  var dirPath = path.join(repodir, provider, repo, branch);
+                  var dirPath = path.join(logdir, provider, repo, branch);
                   var dir = yield fs.readdir(dirPath);
 
                   if (dir.length > 0) {

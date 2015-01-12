@@ -27,6 +27,7 @@ describe('lib/task', function() {
         , 'test'
         , {
               hosts: ['example.com']
+            , options: '-v /host:/container'
             , pre_commands: ["npm test"] 
           }
       ];
@@ -44,7 +45,7 @@ describe('lib/task', function() {
         , 'scp '+homeDir+'/local-images/elzair_protolib.tar lanaci@example.com:'+homeDir+'/remote-images/elzair_protolib.tar'
         , 'ssh lanaci@example.com docker load -i '+homeDir+'/remote-images/elzair_protolib.tar'
         , 'ssh lanaci@example.com docker kill elzair/protolib'
-        , 'ssh lanaci@example.com docker run -d --name elzair/protolib elzair/protolib'
+        , 'ssh lanaci@example.com docker run -d -v /host:/container --name elzair/protolib elzair/protolib'
       ]);
     });
 
@@ -54,7 +55,8 @@ describe('lib/task', function() {
         , 'elzair/protolib'
         , 'test'
         , {
-              testCommands: ['npm test']
+              options: '-v /host:/container'
+            , pre_commands: ['npm test']
           }
       ]; 
       var throwsErr = false;
@@ -85,7 +87,7 @@ describe('lib/task', function() {
     it('should add a repository', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addRepository('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], processCommand, 'repos.toml.test');
+      yield task.addRepository('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -103,6 +105,7 @@ describe('lib/task', function() {
                 "elzair/protolib": {
                   "test": {
                       "hosts": ["example.com"]
+                    , "options": "-p 4000:4000"
                     , "pre_commands": [
                         "npm test"
                       ]
@@ -112,7 +115,8 @@ describe('lib/task', function() {
             , "bitbucket": {
                 "elzair/project": {
                   "master": {
-                    "hosts": ["example.com"]
+                      "hosts": ["example.com"]
+                    , "options": "-v /host:/container"
                     , "pre_commands": [
                         "npm test"
                       ]
@@ -129,7 +133,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('', ['test'], [], 'github', '', ['npm test'], processCommand);
+        yield task.addRepository('', 'test', [], 'github', '', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
