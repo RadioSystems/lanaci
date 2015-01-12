@@ -11,12 +11,12 @@ var addRepository = function*(argv) {
   var args = minimist(argv);
 
   var repository = args['_'][0]
-    , branch     = args['_'][1]
-    , hosts      = args['_'][2].split(',')
-    , options = args.o || args.options || ''
-    , preCmds    = args['_'].slice(3)
-    , provider   = args.p || args.provider || 'github'
-    , url        = args.u || args.url || ''
+    , branch     = args['_'][1] 
+    , hosts      = args.h || args.hosts 
+    , options    = args.o || args.options
+    , preCmds    = args['_'].slice(2)
+    , provider   = args.p || args.provider 
+    , url        = args.u || args.url
     ;
 
   yield task.addRepository(repository, branch, hosts, provider, url, preCmds, options);

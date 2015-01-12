@@ -49,13 +49,14 @@ describe('lib/task', function() {
       ]);
     });
 
-    it('should throw an error on an invalid host', function*() {
+    it('should throw an error when no hosts are specified', function*() {
       var combo = [
           'github'
         , 'elzair/protolib'
         , 'test'
         , {
-              options: '-v /host:/container'
+              hosts: []
+            , options: '-v /host:/container'
             , pre_commands: ['npm test']
           }
       ]; 
@@ -144,11 +145,26 @@ describe('lib/task', function() {
       }
     });
 
+    it('should throw an error on an invalid branch', function*() {
+      var throwsErr = false;
+
+      try {
+        yield task.addRepository('elzair/protolib', '', [], 'github', '', ['npm test'], '', processCommand);
+      }
+      catch (err) {
+        throwsErr = true;
+        expect(err).to.equal('No branch specified!');
+      }
+      finally {
+        expect(throwsErr).to.equal(true);
+      }
+    });
+
     it('should throw an error on an unsupported provider', function*() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('elzair/protolib', ['test'], 'example.com', 'sourceforge', '', ['npm test'], processCommand);
+        yield task.addRepository('elzair/protolib', 'test', 'example.com', 'sourceforge', '', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -185,6 +201,34 @@ describe('lib/task', function() {
         , 'ssh elzair@127.0.0.1 "sudo -u lanaci cat /tmp/id_rsa.pub >> /home/lanaci/.ssh/authorized_keys"'
         , 'ssh elzair@127.0.0.1 "sudo -u lanaci rm /tmp/id_rsa.pub"'
       ]);
+    });
+
+    it('should throw an error on an invalid user', function*() {
+      var throwsErr = false;
+      try {
+        yield task.addRemote('', '127.0.0.1', processCommand);
+      }
+      catch (err) {
+        throwsErr = true;
+        expect(err).to.equal('Invalid user'); 
+      }
+      finally {
+        expect(throwsErr).to.equal(true);
+      }
+    });
+
+    it('should throw an error on an invalid host', function*() {
+      var throwsErr = false;
+      try {
+        yield task.addRemote('elzair', '', processCommand);
+      }
+      catch (err) {
+        throwsErr = true;
+        expect(err).to.equal('Invalid host'); 
+      }
+      finally {
+        expect(throwsErr).to.equal(true);
+      }
     });
   });
 });
