@@ -1,6 +1,6 @@
-angular.module('projectsApp', [])
+var projectsApp = angular.module('projectsApp', []);
 
-.factory('Projects', function ($http) {
+projectsApp.factory('Projects', ['$http', function ($http) {
   return {
     getProjects: function () {
       return $http.get('/projects').then(function (result) {
@@ -8,9 +8,9 @@ angular.module('projectsApp', [])
       });
     }
   };
-})
+}]);
 
-.controller('ProjectsCtrl', function ($scope, Projects) {
+projectsApp.controller('ProjectsCtrl', ['$scope', 'Projects', function ($scope, Projects) {
   $scope.projects = [];
   $scope.retrievedProjects = false;
 
@@ -18,4 +18,4 @@ angular.module('projectsApp', [])
     $scope.projects = projects;
     $scope.retrievedProjects = true;
   });
-});
+}]);
