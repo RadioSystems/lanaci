@@ -7,7 +7,7 @@ var app       = require(__dirname + '/app.js')
   , util      = require('util')
   ;
 
-var addRepository = function*(argv) {
+var addProject = function*(argv) {
   var args = minimist(argv);
 
   var repository = args['_'][0]
@@ -19,7 +19,7 @@ var addRepository = function*(argv) {
     , url        = args.u || args.url
     ;
 
-  yield task.addRepository(repository, branch, hosts, provider, url, preCmds, options);
+  yield task.addProject(repository, branch, hosts, provider, url, preCmds, options);
 };
 
 var addRemote = function*(argv) {
@@ -61,7 +61,7 @@ co(function*() {
       stopApp = true;
       break;
     case 'add-project':
-      yield addRepository(argv.slice(3));
+      yield addProject(argv.slice(3));
       break;
     case 'add-remote':
       yield addRemote(argv.slice(3));
@@ -74,6 +74,7 @@ co(function*() {
   }
 });
 
+// This is needed because co() kills the server
 if (startApp) {
   app.createApp().listen(6823, function () {
     console.log('Server started!');

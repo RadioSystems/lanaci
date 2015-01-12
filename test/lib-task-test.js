@@ -75,7 +75,7 @@ describe('lib/task', function() {
     });
   });
 
-  describe('addRepository', function() {
+  describe('addProject', function() {
     var log, processCommand;
 
     beforeEach(function*() {
@@ -88,7 +88,7 @@ describe('lib/task', function() {
     it('should add a repository', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addRepository('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -107,9 +107,7 @@ describe('lib/task', function() {
                   "test": {
                       "hosts": ["example.com"]
                     , "options": "-p 4000:4000"
-                    , "pre_commands": [
-                        "npm test"
-                      ]
+                    , "pre_commands": ["npm test"]
                   }
                 }
               } 
@@ -118,12 +116,79 @@ describe('lib/task', function() {
                   "master": {
                       "hosts": ["example.com"]
                     , "options": "-v /host:/container"
-                    , "pre_commands": [
-                        "npm test"
-                      ]
+                    , "pre_commands": ["npm test"]
                   }
                 }
               }
+          }
+      });
+
+      yield misc.writeConf('repos.toml.test', backup); // Restore file
+    });
+   
+    it('should add an additional host when one is specified', function*() {
+      var backup = yield misc.readConf('repos.toml.test');
+
+      yield task.addProject('elzair/project', 'master', ['another-example.com'], 'bitbucket', '', ['npm test'], '-v /host:/container', processCommand, 'repos.toml.test');
+
+      var contents = yield misc.readConf('repos.toml.test');
+      var projectPath = path.join(__dirname, '..');
+
+      expect(log).to.deep.equal([
+          'git clone git@bitbucket.org:elzair/project.git '+projectPath+'/repos/bitbucket/elzair/project'
+        , 'mkdir -p '+projectPath+'/logs/bitbucket/elzair/project/master'
+        , 'git checkout --track origin/master'
+      ]);
+
+      expect(contents).to.deep.equal({
+          "version": "0.0.1"
+        , "providers": {
+            "bitbucket": {
+              "elzair/project": {
+                "master": {
+                    "hosts": ["example.com", "another-example.com"]
+                  , "options": "-v /host:/container"
+                  , "pre_commands": ["npm test"]
+                }
+              }
+            }
+          }
+      });
+
+      yield misc.writeConf('repos.toml.test', backup); // Restore file
+    });
+  
+    it('should add an additional branch when one is specified', function*() {
+      var backup = yield misc.readConf('repos.toml.test');
+
+      yield task.addProject('elzair/project', 'dev', ['another-example.com'], 'bitbucket', '', ['lein test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+
+      var contents = yield misc.readConf('repos.toml.test');
+      var projectPath = path.join(__dirname, '..');
+
+      expect(log).to.deep.equal([
+          'git clone git@bitbucket.org:elzair/project.git '+projectPath+'/repos/bitbucket/elzair/project'
+        , 'mkdir -p '+projectPath+'/logs/bitbucket/elzair/project/dev'
+        , 'git checkout --track origin/dev'
+      ]);
+
+      expect(contents).to.deep.equal({
+          "version": "0.0.1"
+        , "providers": {
+            "bitbucket": {
+              "elzair/project": {
+                  "master": {
+                      "hosts": ["example.com"]
+                    , "options": "-v /host:/container"
+                    , "pre_commands": ["npm test"]
+                  }
+                , "dev": {
+                      "hosts": ["another-example.com"]
+                    , "options": "-p 4000:4000"
+                    , "pre_commands": ["lein test"]
+                  }
+              }
+            }
           }
       });
 
@@ -134,7 +199,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('', 'test', [], 'github', '', ['npm test'], '', processCommand);
+        yield task.addProject('', 'test', [], 'github', '', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -149,7 +214,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('elzair/protolib', '', [], 'github', '', ['npm test'], '', processCommand);
+        yield task.addProject('elzair/protolib', '', [], 'github', '', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -164,7 +229,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addRepository('elzair/protolib', 'test', 'example.com', 'sourceforge', '', ['npm test'], processCommand);
+        yield task.addProject('elzair/protolib', 'test', 'example.com', 'sourceforge', '', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;
