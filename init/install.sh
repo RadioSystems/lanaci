@@ -16,6 +16,6 @@ case "$1" in
         exit 0
         ;;
     *)
-        sudo "$LANACIPATH/init/setup.sh"
+        sudo "$LANACIPATH/init/setup-after-install.sh"
         ;;
 esac
