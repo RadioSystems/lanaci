@@ -52,6 +52,7 @@ var projects = exports.projects = function*(next) {
                   }
                 }
                 catch (e) {
+                  console.error(e);
                   err = e;
                 }
                 finally {
