@@ -88,7 +88,7 @@ describe('lib/task', function() {
     it('should add a repository', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('elzair/protolib', 'test', ['example.com'], 'github', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('github', 'elzair/protolib', 'test', ['example.com'], '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -129,7 +129,7 @@ describe('lib/task', function() {
     it('should add an additional host when one is specified', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('elzair/project', 'master', ['another-example.com'], 'bitbucket', '', ['npm test'], '-v /host:/container', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', ['another-example.com'], '', ['npm test'], '-v /host:/container', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -161,7 +161,7 @@ describe('lib/task', function() {
     it('should add an additional branch when one is specified', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('elzair/project', 'dev', ['another-example.com'], 'bitbucket', '', ['lein test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket','elzair/project', 'dev', ['another-example.com'], '', ['lein test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -198,7 +198,7 @@ describe('lib/task', function() {
     it('should update the pre-commands of a project', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('elzair/project', 'master', [], 'bitbucket', '', ['lein test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', [], '', ['lein test'], '', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -230,7 +230,7 @@ describe('lib/task', function() {
     it('should update the options of a project', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('elzair/project', 'master', [], 'bitbucket', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', [], '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -259,11 +259,26 @@ describe('lib/task', function() {
       yield misc.writeConf('repos.toml.test', backup); // Restore file
     });
 
+    it('should throw an error on an unsupported provider', function*() {
+      var throwsErr = false;
+
+      try {
+        yield task.addProject('sourceforge', 'elzair/protolib', 'test', 'example.com', '', ['npm test'], processCommand);
+      }
+      catch (err) {
+        throwsErr = true;
+        expect(err).to.equal('Invalid provider: sourceforge');
+      }
+      finally {
+        expect(throwsErr).to.equal(true);
+      }
+    });
+
     it('should throw an error on an invalid repository', function*() {
       var throwsErr = false;
 
       try {
-        yield task.addProject('', 'test', [], 'github', '', ['npm test'], '', processCommand);
+        yield task.addProject('github', '', 'test', [], '', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -278,26 +293,11 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addProject('elzair/protolib', '', [], 'github', '', ['npm test'], '', processCommand);
+        yield task.addProject('github', 'elzair/protolib', '', [], '', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
         expect(err).to.equal('No branch specified!');
-      }
-      finally {
-        expect(throwsErr).to.equal(true);
-      }
-    });
-
-    it('should throw an error on an unsupported provider', function*() {
-      var throwsErr = false;
-
-      try {
-        yield task.addProject('elzair/protolib', 'test', 'example.com', 'sourceforge', '', ['npm test'], processCommand);
-      }
-      catch (err) {
-        throwsErr = true;
-        expect(err).to.equal('Invalid provider: sourceforge');
       }
       finally {
         expect(throwsErr).to.equal(true);

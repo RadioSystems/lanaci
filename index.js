@@ -10,16 +10,16 @@ var app       = require(__dirname + '/app.js')
 var addProject = function*(argv) {
   var args = minimist(argv);
 
-  var repository = args['_'][0]
-    , branch     = args['_'][1] 
+  var provider   = args['_'][0]
+    , repository = args['_'][1]
+    , branch     = args['_'][2] 
     , hosts      = args.h || args.hosts 
     , options    = args.o || args.options
-    , preCmds    = args['_'].slice(2)
-    , provider   = args.p || args.provider 
+    , preCmds    = args['_'].slice(3)
     , url        = args.u || args.url
     ;
 
-  yield task.addProject(repository, branch, hosts, provider, url, preCmds, options);
+  yield task.addProject(provider, repository, branch, hosts, url, preCmds, options);
 };
 
 var addRemote = function*(argv) {
@@ -37,11 +37,11 @@ co(function*() {
   var usage = util.format([
       'Usage: %s <start|stop|add-project|add-remote> [AddOptions|AddRemoteOptions]'
     , 'Add Options:'
+    , '\tCode Host that provides webhooks: <github|bitbucket>'
     , '\tName of repository'
     , '\tName of branch'
     , '\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
     , '\t-o --options\tContainer runtime options'
-    , '\t-p --provider\tCode host that provides webhooks <github|bitbucket>'
     , '\t-u --url\tURL of private code repository'
     , '\tThe rest are assumed to be pre-commands'
     , ''
