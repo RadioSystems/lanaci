@@ -25,10 +25,11 @@ var integrate = exports.integrate = function*(next) {
 var projects = exports.projects = function*(next) {
   var dirs = [];
   var projects = [];
-  var logdir = path.normalize(path.join(__dirname, '..', 'logs'));
+  var confFile = path.join(__dirname, '..', 'conf', 'repos.toml');
+  var logDir = path.join(__dirname, '..', 'logs');
 
   try {
-    var conf = yield misc.readConf('repos.toml');
+    var conf = yield misc.readConf(confFile);
 
     for (var provider in conf.providers) {
       if (conf.providers.hasOwnProperty(provider)) {
@@ -40,7 +41,7 @@ var projects = exports.projects = function*(next) {
                 var file = '';
 
                 try {
-                  var dirPath = path.join(logdir, provider, repo, branch);
+                  var dirPath = path.join(logDir, provider, repo, branch);
                   var dir = yield fs.readdir(dirPath);
 
                   if (dir.length > 0) {
