@@ -2,9 +2,12 @@ var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
   , hooks    = require(__dirname + '/../lib/hooks')
   , mocks    = require('node-mocks-http')
+  , path     = require('path')
 ;
 
 describe('lib/hooks', function() {
+  var confFile = path.join(__dirname, '..', 'conf', 'repos.toml.template');
+
   describe('handleHooks', function() {
     describe('bitbucket', function() {
       it('should return the combos on a valid request', function*() {
@@ -50,7 +53,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
+        var combos = yield hooks.handleHooks(validRequest, confFile);
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -59,8 +62,9 @@ describe('lib/hooks', function() {
           , repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              hosts: ['branch.example.com']
-            , options: '-v /host:/container'
+              hosts: {
+                'branch.example.com':  '-v /host:/container'
+              }
             , pre_commands: ['npm test']
           }
         });
@@ -194,7 +198,7 @@ describe('lib/hooks', function() {
           }
         });
         
-        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
+        var combos = yield hooks.handleHooks(validRequest, confFile);
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(2);
@@ -203,8 +207,9 @@ describe('lib/hooks', function() {
           , repo: 'repo/path'
           , branch: 'branch'
           , conf: {
-              hosts: ['branch.example.com']
-            , options: '-v /host:/container'
+              hosts: {
+                'branch.example.com':  '-v /host:/container'
+              }
             , pre_commands: ['npm test']
           }
         });
@@ -213,8 +218,9 @@ describe('lib/hooks', function() {
           , repo: 'repo/path'
           , branch: 'other_branch'
           , conf: {
-              hosts: ['other.branch.example.com']
-            , options: '-p 4000:4000'
+              hosts: {
+                'other.branch.example.com':  '-p 4000:4000'
+              }
             , pre_commands: ['lein test']
           }
         });
@@ -395,7 +401,7 @@ describe('lib/hooks', function() {
           }
         });
 
-        var combos = yield hooks.handleHooks(validRequest, "repos.toml.template");
+        var combos = yield hooks.handleHooks(validRequest, confFile);
         
         expect(combos).to.be.an('array');
         expect(combos).to.have.length(1);
@@ -404,8 +410,9 @@ describe('lib/hooks', function() {
           , repo: 'github/repo'
           , branch: 'another_branch'
           , conf: {
-              hosts: ['another.branch.example.com']
-            , options: '-v /host2:/container -p 4001:4001'
+              hosts: {
+                'another.branch.example.com':  '-v /host2:/container -p 4001:4001'
+              }
             , pre_commands: ['go test']
           }
         });
@@ -424,7 +431,7 @@ describe('lib/hooks', function() {
         var throwsErr = false;
 
         try {
-          yield hooks.handleHooks(invalidRequest, "repos.toml.template");
+          yield hooks.handleHooks(invalidRequest, confFile);
         }
         catch(err) {
           throwsErr = true;
