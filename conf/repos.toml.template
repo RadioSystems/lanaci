@@ -5,23 +5,27 @@ version = "0.0.1"
   [providers.bitbucket.repo/path]
 
     [providers.bitbucket.repo/path.branch]
-      hosts = [ "branch.example.com" ]
-      options = "-v /host:/container"
       pre_commands = [ "npm test" ]
 
+      [providers.bitbucket.repo/path.branch.hosts]
+      branch.example.com = "-v /host:/container"
+
     [providers.bitbucket.repo/path.other_branch]
-      hosts = [ "other.branch.example.com" ]
-      options = "-p 4000:4000"
       pre_commands = [ "lein test" ]
+
+      [providers.bitbucket.repo/path.other_branch.hosts]
+      other.branch.example.com = "-p 4000:4000"
 
   [providers.github]
 
     [providers.github.github/repo.another_branch]
-      hosts = [ "another.branch.example.com" ]
-      options = "-v /host2:/container -p 4001:4001"
       pre_commands = [ "go test" ]
 
+      [providers.github.github/repo.another_branch.hosts]
+      another.branch.example.com = "-v /host2:/container -p 4001:4001"
+
     [providers.github.github/repo.yet_another_branch]
-      hosts = [ "yet.another.branch.example.com" ]
-      options = ""
       pre_commands = [ "some other command" ]
+
+      [providers.github.github/repo.yet_another_branch.hosts]
+      yet.another.branch.example.com = ""

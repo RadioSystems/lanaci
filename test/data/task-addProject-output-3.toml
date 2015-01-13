@@ -8,5 +8,5 @@ pre_commands = ["npm test"]
 [providers.bitbucket.elzair/project.dev]
 pre_commands = ["lein test"]
 
-  [providers.bitbucket.elzair/project.master.hosts]
+  [providers.bitbucket.elzair/project.dev.hosts]
   another-example.com = "-p 4000:4000"

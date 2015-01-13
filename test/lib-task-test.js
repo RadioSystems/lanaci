@@ -1,12 +1,16 @@
 var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
+  , fs       = require('co-fs')
   , misc     = require(__dirname + '/../lib/misc')
   , path     = require('path')
   , task     = require(__dirname + '/../lib/task')
+  , toml     = require('toml')
   , util     = require('util')
   ;
 
 describe('lib/task', function() {
+  var dataPath = path.join(__dirname, 'data');
+
   describe('integrate', function() {
     var log, processCommand, handleError;
 
@@ -87,11 +91,12 @@ describe('lib/task', function() {
     });
     
     it('should add a repository', function*() {
-      var backup = yield misc.readConf('repos.toml.test');
+      var input  = path.join(dataPath, 'task-addProject-input-1.toml');
+      var output  = path.join(dataPath, 'task-addProject-output-1.toml');
+      var backup = yield misc.readConf(input);
 
-      yield task.addProject('github', 'elzair/protolib', 'test', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('github', 'elzair/protolib', 'test', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand, input);
 
-      var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
@@ -100,41 +105,21 @@ describe('lib/task', function() {
         , 'git checkout --track origin/test'
       ]);
 
-      expect(contents).to.deep.equal({
-          "version": "0.0.1"
-        , "providers": {
-              "github": {
-                "elzair/protolib": {
-                  "test": {
-                      "hosts": {
-                        "example.com": "-p 4000:4000"
-                      }
-                    , "pre_commands": ["npm test"]
-                  }
-                }
-              } 
-            , "bitbucket": {
-                "elzair/project": {
-                  "master": {
-                      "hosts": {
-                        "example.com": "-v /host:/container"
-                      }
-                    , "pre_commands": ["npm test"]
-                  }
-                }
-              }
-          }
-      });
+      var contents = yield misc.readConf(input);
+      var testContents = yield misc.readConf(output);
 
-      yield misc.writeConf('repos.toml.test', backup); // Restore file
+      expect(contents).to.deep.equal(testContents);
+
+      yield misc.writeConf(input, backup, dataPath); // Restore file
     });
    
     it('should add an additional host when one is specified', function*() {
-      var backup = yield misc.readConf('repos.toml.test');
+      var input  = path.join(dataPath, 'task-addProject-input-2.toml');
+      var output  = path.join(dataPath, 'task-addProject-output-2.toml');
+      var backup = yield misc.readConf(input);
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', 'another-example.com', '-v /host:/container', ['npm test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', 'another.example.com', '-v /host:/container', ['npm test'], '', processCommand, input);
 
-      var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
@@ -143,30 +128,21 @@ describe('lib/task', function() {
         , 'git checkout --track origin/master'
       ]);
 
-      expect(contents).to.deep.equal({
-          "version": "0.0.1"
-        , "providers": {
-            "bitbucket": {
-              "elzair/project": {
-                "master": {
-                    "hosts": ["example.com", "another-example.com"]
-                  , "options": "-v /host:/container"
-                  , "pre_commands": ["npm test"]
-                }
-              }
-            }
-          }
-      });
+      var contents = yield misc.readConf(input);
+      var testContents = yield misc.readConf(output);
 
-      yield misc.writeConf('repos.toml.test', backup); // Restore file
+      expect(contents).to.deep.equal(testContents);
+
+      yield misc.writeConf(input, backup, dataPath); // Restore file
     });
   
     it('should add an additional branch when one is specified', function*() {
-      var backup = yield misc.readConf('repos.toml.test');
+      var input  = path.join(dataPath, 'task-addProject-input-3.toml');
+      var output  = path.join(dataPath, 'task-addProject-output-3.toml');
+      var backup = yield misc.readConf(input);
 
-      yield task.addProject('bitbucket','elzair/project', 'dev', 'another-example.com', '-p 4000:4000', ['lein test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket','elzair/project', 'dev', 'another-example.com', '-p 4000:4000', ['lein test'], '', processCommand, input);
 
-      var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
@@ -175,35 +151,21 @@ describe('lib/task', function() {
         , 'git checkout --track origin/dev'
       ]);
 
-      expect(contents).to.deep.equal({
-          "version": "0.0.1"
-        , "providers": {
-            "bitbucket": {
-              "elzair/project": {
-                  "master": {
-                      "hosts": ["example.com"]
-                    , "options": "-v /host:/container"
-                    , "pre_commands": ["npm test"]
-                  }
-                , "dev": {
-                      "hosts": ["another-example.com"]
-                    , "options": "-p 4000:4000"
-                    , "pre_commands": ["lein test"]
-                  }
-              }
-            }
-          }
-      });
+      var contents = yield misc.readConf(input);
+      var testContents = yield misc.readConf(output);
 
-      yield misc.writeConf('repos.toml.test', backup); // Restore file
+      expect(contents).to.deep.equal(testContents);
+
+      yield misc.writeConf(input, backup, dataPath); // Restore file
     });
    
     it('should update the pre-commands of a project', function*() {
-      var backup = yield misc.readConf('repos.toml.test');
+      var input  = path.join(dataPath, 'task-addProject-input-4.toml');
+      var output  = path.join(dataPath, 'task-addProject-output-4.toml');
+      var backup = yield misc.readConf(input);
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', '', '', ['lein test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', '', '', ['lein test'], '', processCommand, input);
 
-      var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
@@ -212,30 +174,21 @@ describe('lib/task', function() {
         , 'git checkout --track origin/master'
       ]);
 
-      expect(contents).to.deep.equal({
-          "version": "0.0.1"
-        , "providers": {
-            "bitbucket": {
-              "elzair/project": {
-                "master": {
-                    "hosts": ["example.com"]
-                  , "options": "-v /host:/container"
-                  , "pre_commands": ["lein test"]
-                }
-              }
-            }
-          }
-      });
+      var contents = yield misc.readConf(input);
+      var testContents = yield misc.readConf(output);
 
-      yield misc.writeConf('repos.toml.test', backup); // Restore file
+      expect(contents).to.deep.equal(testContents);
+
+      yield misc.writeConf(input, backup, dataPath); // Restore file
     });
   
     it('should update the options of a project', function*() {
-      var backup = yield misc.readConf('repos.toml.test');
+      var input  = path.join(dataPath, 'task-addProject-input-5.toml');
+      var output  = path.join(dataPath, 'task-addProject-output-5.toml');
+      var backup = yield misc.readConf(input);
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', '', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand, input);
 
-      var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
 
       expect(log).to.deep.equal([
@@ -244,29 +197,19 @@ describe('lib/task', function() {
         , 'git checkout --track origin/master'
       ]);
 
-      expect(contents).to.deep.equal({
-          "version": "0.0.1"
-        , "providers": {
-            "bitbucket": {
-              "elzair/project": {
-                "master": {
-                    "hosts": ["example.com"]
-                  , "options": "-p 4000:4000"
-                  , "pre_commands": ["npm test"]
-                }
-              }
-            }
-          }
-      });
+      var contents = yield misc.readConf(input);
+      var testContents = yield misc.readConf(output);
 
-      yield misc.writeConf('repos.toml.test', backup); // Restore file
+      expect(contents).to.deep.equal(testContents);
+
+      yield misc.writeConf(input, backup, dataPath); // Restore file
     });
 
     it('should throw an error on an unsupported provider', function*() {
       var throwsErr = false;
 
       try {
-        yield task.addProject('sourceforge', 'elzair/protolib', 'test', 'example.com', '', ['npm test'], processCommand);
+        yield task.addProject('sourceforge', 'elzair/protolib', 'test', 'example.com', '-p 4000:4000', ['npm test'], processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -281,7 +224,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addProject('github', '', 'test', [], '', ['npm test'], '', processCommand);
+        yield task.addProject('github', '', 'test', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;
@@ -296,7 +239,7 @@ describe('lib/task', function() {
       var throwsErr = false;
 
       try {
-        yield task.addProject('github', 'elzair/protolib', '', [], '', ['npm test'], '', processCommand);
+        yield task.addProject('github', 'elzair/protolib', '', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand);
       }
       catch (err) {
         throwsErr = true;

@@ -1,5 +1,0 @@
-version = "0.0.1"
-[providers.bitbucket.elzair/project.master]
-hosts = ["example.com"]
-options = "-v /host:/container"
-pre_commands = ["npm test"]
