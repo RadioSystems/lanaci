@@ -2,13 +2,15 @@ var co_mocha = require('co-mocha')
   , expect   = require('chai').expect
   , fs       = require('co-fs')
   , misc     = require(__dirname + '/../lib/misc')
+  , path     = require('path')
   , util     = require('util')
   ;
 
 describe('lib/misc', function() {
   describe('readConf', function() {
     it('should read the file and return an object with its contents', function*() {
-      var repos = yield misc.readConf('repos.toml.template');
+      var confPath = path.join(__dirname, '..', 'conf', 'repos.toml.template');
+      var repos = yield misc.readConf(confPath);
       expect(repos).to.be.an('object');
       expect(repos).to.deep.equal({
           "version": "0.0.1"
@@ -16,15 +18,17 @@ describe('lib/misc', function() {
               "bitbucket": {
                 "repo/path": {
                     "branch": {
-                        "hosts": ["branch.example.com"]
-                      , "options": "-v /host:/container"
+                        "hosts": {
+                          "branch.example.com": "-v /host:/container"
+                        }
                       , "pre_commands": [
                           "npm test"
                         ]
                     }
                   , "other_branch": {
-                        "hosts": ["other.branch.example.com"]
-                      , "options": "-p 4000:4000"
+                        "hosts": {
+                          "other.branch.example.com": "-p 4000:4000"
+                        }
                       , "pre_commands": [
                           "lein test"
                         ]
@@ -34,15 +38,17 @@ describe('lib/misc', function() {
             , "github": {
                 "github/repo": {
                     "another_branch": {
-                        "hosts": ["another.branch.example.com"]
-                      , "options": "-v /host2:/container -p 4001:4001"
+                        "hosts": {
+                          "another.branch.example.com": "-v /host2:/container -p 4001:4001"
+                        }
                       , "pre_commands": [
                           "go test"
                         ]
                     }
                   , "yet_another_branch": {
-                        "hosts": ["yet.another.branch.example.com"]
-                      , "options": ""
+                        "hosts": {
+                          "yet.another.branch.example.com": ""
+                        }
                       , "pre_commands": [
                           "some other command"
                         ]
@@ -62,7 +68,9 @@ describe('lib/misc', function() {
             "github": {
               "elzair/protolib": {
                 "master": {
-                    "hosts": ["protolib.example.com"]
+                    "hosts": {
+                      "protolib.example.com": "-p 4000:4000"
+                    }
                   , "pre_commands": [
                       "npm test"
                     ]
@@ -72,9 +80,10 @@ describe('lib/misc', function() {
           }
       };
 
-      yield misc.writeConf('repos.toml.test2', test);
+      var confPath = path.join(__dirname, 'data', 'misc-writeConf-1.toml');
+      yield misc.writeConf(confPath, test);
 
-      var contents = yield misc.readConf('repos.toml.test2');
+      var contents = yield misc.readConf(confPath);
 
       expect(contents).to.deep.equal(test);
     });

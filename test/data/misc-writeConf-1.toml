@@ -1,0 +1,5 @@
+version = "0.0.1"
+[providers.github.elzair/protolib.master]
+pre_commands = ["npm test"]
+[providers.github.elzair/protolib.master.hosts]
+protolib.example.com = "-p 4000:4000"
