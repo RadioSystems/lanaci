@@ -27,16 +27,16 @@ sudo -u lanaci chmod 600 "$SSHPATH/id_rsa" "$SSHPATH/id_rsa.pub"
 command -v lsb_release >/dev/null 2>&1
 if [ "$?" = "0" ] && [ $(lsb_release -is) = "Ubuntu" ] && [ $(lsb_release -cs) = "trusty" ]
 then
-    cp "$SCRIPTPATH/init/lanaci.conf" /etc/init/lanaci.conf
+    cp "$SCRIPTPATH/lanaci.conf" /etc/init/lanaci.conf
 elif [ -d "/etc/systemd/system" ]
 then
-    echo "$SCRIPTPATH/init/lanaci.service" /etc/systemd/system/lanaci.service 
+    echo "$SCRIPTPATH/lanaci.service" /etc/systemd/system/lanaci.service 
 elif [ -d "/run/systemd/system" ]
 then
-    echo "$SCRIPTPATH/init/lanaci.service" /run/systemd/system/lanaci.service 
+    echo "$SCRIPTPATH/lanaci.service" /run/systemd/system/lanaci.service 
 elif [ -d "/usr/lib/systemd/system" ]
 then
-    echo "$SCRIPTPATH/init/lanaci.service" /usr/lib/systemd/system/lanaci.service 
+    echo "$SCRIPTPATH/lanaci.service" /usr/lib/systemd/system/lanaci.service 
 else 
     echo "If you want to run lanaci as a daemon, you must configure it manually!" > /dev/stderr
 fi
