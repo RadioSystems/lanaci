@@ -12,7 +12,7 @@ cd "$LANACIPATH" && npm install
 
 # Make symbolic link to bin/lanactl
 mkdir -p "$CWD/bin"
-ln -s "LANACIPATH/bin/lanactl" "$CWD/bin/lanactl"
+ln -s "$LANACIPATH/bin/lanactl" "$CWD/bin/lanactl"
 
 # Optionally, call setup.sh
 case "$1" in
