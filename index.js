@@ -13,7 +13,7 @@ var addProject = function*(argv) {
   var provider   = args['_'][0]
     , repository = args['_'][1]
     , branch     = args['_'][2] 
-    , host       = args.h || args.host 
+    , host       = args.H || args.host 
     , options    = args.o || args.options
     , preCmds    = args['_'].slice(3)
     , url        = args.u || args.url
@@ -40,7 +40,7 @@ co(function*() {
     , '\tCode Host that provides webhooks: <github|bitbucket>'
     , '\tName of repository'
     , '\tName of branch'
-    , '\tComma-separated list of remote hosts: host1.example.com,host2.example.com,etc.'
+    , '\t-H --host\tName of remote host'
     , '\t-o --options\tContainer runtime options'
     , '\t-u --url\tURL of private code repository'
     , '\tThe rest are assumed to be pre-commands'
