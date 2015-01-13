@@ -1,0 +1,6 @@
+version = "0.0.1"
+[providers.bitbucket.elzair/project.master]
+pre_commands = ["lein test"]
+
+  [providers.bitbucket.elzair/project.master.hosts]
+  example.com = "-v /host:/container"

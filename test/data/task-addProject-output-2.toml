@@ -1,0 +1,7 @@
+version = "0.0.1"
+[providers.bitbucket.elzair/project.master]
+pre_commands = ["npm test"]
+
+  [providers.bitbucket.elzair/project.master.hosts]
+  example.com = "-v /host:/container"
+  another.example.com = "-v /host:/container"
