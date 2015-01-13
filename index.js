@@ -19,6 +19,7 @@ var addProject = function*(argv) {
     , url        = args.u || args.url
     ;
 
+  console.log(provider);
   yield task.addProject(provider, repository, branch, host, options, preCmds, url);
 };
 
@@ -52,6 +53,7 @@ co(function*() {
 
   var cmd = argv[2];
 
+  try {
   switch (cmd) {
     case 'start':
       startApp = true;
@@ -71,6 +73,10 @@ co(function*() {
       break;
     default:
       console.error(usage);
+  }
+  }
+  catch (err) {
+    console.error(err);
   }
 });
 
