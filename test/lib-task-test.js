@@ -26,9 +26,10 @@ describe('lib/task', function() {
         , 'elzair/protolib'
         , 'test'
         , {
-              hosts: ['example.com']
-            , options: '-v /host:/container'
-            , pre_commands: ["npm test"] 
+              'hosts': {
+                'example.com': '-v /host:/container'
+              }
+            , 'pre_commands': ["npm test"] 
           }
       ];
 
@@ -55,9 +56,9 @@ describe('lib/task', function() {
         , 'elzair/protolib'
         , 'test'
         , {
-              hosts: []
-            , options: '-v /host:/container'
-            , pre_commands: ['npm test']
+              'hosts': {
+              }
+            , 'pre_commands': ['npm test']
           }
       ]; 
       var throwsErr = false;
@@ -67,7 +68,7 @@ describe('lib/task', function() {
       }
       catch (err) {
         throwsErr = true;
-        expect(err).to.equal('You must specify a list of hosts for elzair/protolib test');
+        expect(err).to.equal('You must specify hosts for elzair/protolib test');
       }
       finally {
         expect(throwsErr).to.equal(true);
@@ -88,7 +89,7 @@ describe('lib/task', function() {
     it('should add a repository', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('github', 'elzair/protolib', 'test', ['example.com'], '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('github', 'elzair/protolib', 'test', 'example.com', '-p 4000:4000', ['npm test'], '', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -105,8 +106,9 @@ describe('lib/task', function() {
               "github": {
                 "elzair/protolib": {
                   "test": {
-                      "hosts": ["example.com"]
-                    , "options": "-p 4000:4000"
+                      "hosts": {
+                        "example.com": "-p 4000:4000"
+                      }
                     , "pre_commands": ["npm test"]
                   }
                 }
@@ -114,8 +116,9 @@ describe('lib/task', function() {
             , "bitbucket": {
                 "elzair/project": {
                   "master": {
-                      "hosts": ["example.com"]
-                    , "options": "-v /host:/container"
+                      "hosts": {
+                        "example.com": "-v /host:/container"
+                      }
                     , "pre_commands": ["npm test"]
                   }
                 }
@@ -129,7 +132,7 @@ describe('lib/task', function() {
     it('should add an additional host when one is specified', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', ['another-example.com'], '', ['npm test'], '-v /host:/container', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', 'another-example.com', '-v /host:/container', ['npm test'], '', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -161,7 +164,7 @@ describe('lib/task', function() {
     it('should add an additional branch when one is specified', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('bitbucket','elzair/project', 'dev', ['another-example.com'], '', ['lein test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket','elzair/project', 'dev', 'another-example.com', '-p 4000:4000', ['lein test'], '', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -198,7 +201,7 @@ describe('lib/task', function() {
     it('should update the pre-commands of a project', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', [], '', ['lein test'], '', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', '', '', ['lein test'], '', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -230,7 +233,7 @@ describe('lib/task', function() {
     it('should update the options of a project', function*() {
       var backup = yield misc.readConf('repos.toml.test');
 
-      yield task.addProject('bitbucket', 'elzair/project', 'master', [], '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
+      yield task.addProject('bitbucket', 'elzair/project', 'master', '', '', ['npm test'], '-p 4000:4000', processCommand, 'repos.toml.test');
 
       var contents = yield misc.readConf('repos.toml.test');
       var projectPath = path.join(__dirname, '..');
@@ -282,7 +285,7 @@ describe('lib/task', function() {
       }
       catch (err) {
         throwsErr = true;
-        expect(err).to.equal('No repository specified!');
+        expect(err).to.equal('No repository specified');
       }
       finally {
         expect(throwsErr).to.equal(true);
@@ -297,7 +300,7 @@ describe('lib/task', function() {
       }
       catch (err) {
         throwsErr = true;
-        expect(err).to.equal('No branch specified!');
+        expect(err).to.equal('No branch specified');
       }
       finally {
         expect(throwsErr).to.equal(true);

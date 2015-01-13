@@ -13,13 +13,13 @@ var addProject = function*(argv) {
   var provider   = args['_'][0]
     , repository = args['_'][1]
     , branch     = args['_'][2] 
-    , hosts      = args.h || args.hosts 
+    , host       = args.h || args.host 
     , options    = args.o || args.options
     , preCmds    = args['_'].slice(3)
     , url        = args.u || args.url
     ;
 
-  yield task.addProject(provider, repository, branch, hosts, url, preCmds, options);
+  yield task.addProject(provider, repository, branch, host, options, preCmds, url);
 };
 
 var addRemote = function*(argv) {
