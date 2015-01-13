@@ -11,7 +11,7 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
 # Make user lanaci owner of lanaci directory
-LANACIPATH="$SCRIPTPATH/../"
+LANACIPATH="$SCRIPTPATH/../.."
 chown -R lanaci "$LANACIPATH/lanaci"
 
 # Add SSH Keys
