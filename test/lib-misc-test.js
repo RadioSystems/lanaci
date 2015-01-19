@@ -135,23 +135,18 @@ describe('lib/misc', function() {
 
   describe('processCommand', function () {
     it('should process the command', function*() {
-      var exec = function* (cmd, opts) {
-        return {stdout: cmd, error: null, stderr: ''};
-      };
+      var cmd = path.join(__dirname, 'data', 'misc-processCommand-test-1.sh');
+      var result = yield misc.processCommand(cmd, __dirname);
 
-      var result = yield misc.processCommand('ls -al .', __dirname, exec);
-
-      expect(result).to.equal('ls -al .');
+      expect(result).to.equal('This works!\n');
     });
 
-    it('should write error.message to the error file', function*() {
-      var exec = function* (cmd, opts) {
-        return {stdout: cmd, err: {message: 'Write this'}, stderr: ''};
-      };
+    it('should throw an error when the exit code is nonzero', function*() {
       var throwsErr = false;
+      var cmd = path.join(__dirname, 'data', 'misc-processCommand-test-2.sh');
 
       try {
-        yield misc.processCommand('ls -al .', '/tmp', exec);
+        yield misc.processCommand(cmd, '/tmp');
       }
       catch (err) {
         throwsErr = true;
